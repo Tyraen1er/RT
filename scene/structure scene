@@ -1,0 +1,34 @@
+scene:				obligatoire
+camera:				obligatoire
+position:			obligatoire
+x y z
+orientation:		vecteur de direction (1 0 = regarde vers les x+)
+x z
+#					obligatoire
+sphere:
+position:			obligatoire dans l'objet
+x y z
+orientation:		optionel (defaut: 0 0 0)
+x y z
+dimension:			obligatoire dans l'objet
+x
+color:				optionel (defaut: rouge)
+0xffffff ou
+123456789 ou
+R G B
+#					obligatoire entre les objets
+objet:				(sphere, cone, plan, cylinder)
+position:			obligatoire dans l'objet
+x y z
+dimension:			obligatoire dans sphere(rayon), cone(angle), cylindre(rayon)
+x
+orientation:		optionel (defaut: 1 0 0)
+x y z
+#
+light:
+position:			obligatoire dans l'objet
+x y z
+intensity:			optionel (defaut: 100)
+100
+#					obligatoire si au moins un objet
+end					obligatoire
