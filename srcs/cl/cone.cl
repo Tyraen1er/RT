@@ -12,7 +12,7 @@
 
 #include "rt.h.cl"
 
-static void		ft_cone_col(const t_object obj, t_ray *ray)
+static void		ft_cone_col(const t_object obj, t_ray *ray, __global t_rt *rt)
 {
 	const t_vector		dist = ray->pos - obj.pos;
 	const t_vector		rot = obj.rot;

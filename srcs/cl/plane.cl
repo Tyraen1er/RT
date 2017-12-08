@@ -12,7 +12,7 @@
 
 #include "rt.h.cl"
 
-static void		ft_plane_col(const t_object obj, t_ray *ray)
+static void		ft_plane_col(const t_object obj, t_ray *ray, __global t_rt *rt)
 {
 	const double	d = (dot(obj.rot, obj.pos) - dot(obj.rot, ray->pos)) \
 												/ dot(obj.rot, ray->dir);

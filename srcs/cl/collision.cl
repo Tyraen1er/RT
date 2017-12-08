@@ -25,7 +25,7 @@ static void		ft_check_collisions_2(__global t_rt *rt, __global t_light *l, t_ray
 	{
 		o.size.x = 0.1;
 		o.pos = l[i].pos;
-		ft_sphere_col(o, ray);
+		ft_sphere_col(o, ray, rt);
 		if (ray->t < ray->dist)
 		{
 			ray->id = i + rt->nb_obj;
@@ -41,13 +41,13 @@ static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 	while (++i < rt->nb_obj)
 	{
 		if (rt->objects[i].type == SPHERE)
-			ft_sphere_col(rt->objects[i], ray);
+			ft_sphere_col(rt->objects[i], ray, rt);
 		else if (rt->objects[i].type == PLANE)
-			ft_plane_col(rt->objects[i], ray);
+			ft_plane_col(rt->objects[i], ray, rt);
 		else if (rt->objects[i].type == CONE)
-			ft_cone_col(rt->objects[i], ray);
+			ft_cone_col(rt->objects[i], ray, rt);
 		else if (rt->objects[i].type == CYLINDER)
-			ft_cyl_col(rt->objects[i], ray);
+			ft_cyl_col(rt->objects[i], ray, rt);
 		if (ray->t < ray->dist)
 		{
 			ray->id = i;

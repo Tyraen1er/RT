@@ -31,7 +31,7 @@
 	ft_refract_ray(tmp, tmp->objects[i].refract, 1.0, n);
 }*/
 
-double		ft_shadow_col(t_rt *tmp, t_ray *r)
+double		ft_shadow_col(t_rt *tmp, t_ray *r, __global t_rt *rt)
 {
 	int			i = -1;
 	t_ray		ray = *r;
@@ -41,13 +41,13 @@ double		ft_shadow_col(t_rt *tmp, t_ray *r)
 	{
 		ray.t = r->dist;
 		if (tmp->objects[i].type == SPHERE)
-			ft_sphere_col(tmp->objects[i], &ray);
+			ft_sphere_col(tmp->objects[i], &ray, rt);
 		else if (tmp->objects[i].type == PLANE)
-			ft_plane_col(tmp->objects[i], &ray);
+			ft_plane_col(tmp->objects[i], &ray, rt);
 		else if (tmp->objects[i].type == CONE)
-			ft_cone_col(tmp->objects[i], &ray);
+			ft_cone_col(tmp->objects[i], &ray, rt);
 		else if (tmp->objects[i].type == CYLINDER)
-			ft_cyl_col(tmp->objects[i], &ray);
+			ft_cyl_col(tmp->objects[i], &ray, rt);
 		if (ray.t < r->dist && ray.t > 0.0 && !objs[i].refract && !objs[i].transp)
 			return (1.0);
 		if (ray.t < r->dist && ray.t > 0.0 && objs[i].transp)
@@ -76,7 +76,7 @@ double		ft_soft_shadows(__global t_rt *rt, const t_vector hit, __global t_light 
 		tmp.t = tmp.dist;
 		tmp.dir = normalize(v);
 		tmp.pos = hit;
-		l += ft_shadow_col(&save, &tmp);
+		l += ft_shadow_col(&save, &tmp, rt);
 	}
 	return (l / d);
 }
@@ -92,5 +92,5 @@ double		ft_hard_shadows(__global t_rt *rt, const t_vector hit, __global t_light 
 	r2.t = r2.dist;
 	r2.dir = normalize(v);
 	r2.pos = hit;
-	return (ft_shadow_col(&save, &r2));
+	return (ft_shadow_col(&save, &r2, rt));
 }

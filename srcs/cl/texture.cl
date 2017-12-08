@@ -36,7 +36,7 @@ static t_color		ft_chessboard(const t_vector hit, const __global t_object *obj, 
 static t_color		ft_procedural_texture(__global t_rt *rt, const t_ray ray, \
 								__global t_object *obj, __constant double *rand)
 {
-	const t_vector	hit = ray.pos + ray.dist * ray.dir;
+//	const t_vector	hit = ray.pos + ray.dist * ray.dir;
 
 	// if (obj->p_texture == 0)
 	// 	return (ft_chessboard(hit, obj, ft_normale(rt, obj, hit, &ray, rand)));

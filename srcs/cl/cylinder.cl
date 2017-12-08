@@ -12,7 +12,7 @@
 
 #include "rt.h.cl"
 
-static void		ft_cyl_col(const t_object obj, t_ray *ray)
+static void		ft_cyl_col(const t_object obj, t_ray *ray, __global t_rt *rt)
 {
 	const t_vector		dist = ray->pos - obj.pos;
 	const t_vector		rot = obj.rot;
@@ -22,7 +22,6 @@ static void		ft_cyl_col(const t_object obj, t_ray *ray)
 		.c = dot(dist, dist) - pow(dot(dist, rot), 2) - pow(obj.size.x, 2), \
 		.delta = e.b * e.b - 4.0 * e.a * e.c
 	};
-
 	if (e.delta < 0.0)
 		return ;
 	e.c = (-e.b + sqrt(e.delta)) / (2 * e.a);
