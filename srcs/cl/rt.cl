@@ -123,7 +123,7 @@ __kernel void	core(__global uint *pixels, __global t_rt *rt, \
 	t_object	obj;
 	int			color;
 
-	// print_data_infos(rt, coords, ray);
+	print_data_infos(rt, coords, ray);
 	ft_check_collisions(rt, &ray);
 	obj = rt->objects[ray.id];
 	if (rt->effects && (rt->objects[ray.id].reflect || rt->objects[ray.id].refract || rt->objects[ray.id].transp))

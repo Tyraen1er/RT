@@ -86,6 +86,7 @@ typedef struct		s_object
 	double			refract;
 	double			transp;
 	double			np;
+	int				negative;
 	int				type;
 	int				p_texture;
 }					t_object;
