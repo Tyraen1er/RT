@@ -66,6 +66,7 @@ typedef struct		s_ray
 	t_vector		dir;
 	double			t;
 	double			dist;
+	double			otherside;
 	int				id;
 	int				bounces;
 }					t_ray;

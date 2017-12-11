@@ -26,8 +26,12 @@ static void		ft_sphere_col(const t_object obj, t_ray *ray, __global t_rt *rt)
 		return ;
 	e.c = (-e.b + sqrt(e.delta)) / (2.0 * e.a);
 	e.delta = (-e.b - sqrt(e.delta)) / (2.0 * e.a);
+	ray->otherside = e.delta - e.c;
 	if (e.c > e.delta)
+	{
+		ray->otherside = e.c - e.delta;
 		e.c = e.delta;
+	}
 	if (e.c > 0.0000001 && e.c < ray->t)
 		ray->t = e.c;
 }

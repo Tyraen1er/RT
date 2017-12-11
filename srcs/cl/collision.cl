@@ -52,10 +52,10 @@ static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 		{
 			ray->id = i;
 			ray->dist = ray->t;
-			if (rt->objects[i].negative)
-				ray->t = check_col_neg(rt, ray, i);
 		}
 	}
+	if (rt->objects[ray->id].negative)
+		ray->t = check_col_neg(rt, ray, i);
 	if (rt->lights)
 		ft_check_collisions_2(rt, rt->lights, ray);
 }
