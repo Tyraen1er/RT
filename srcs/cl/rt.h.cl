@@ -135,6 +135,7 @@ typedef struct		s_rt
 	int				effects;
 }					t_rt;
 
+static int				check_col_neg(__global t_rt *rt, t_ray *ray, int hit);
 void print_data_infos(__global t_rt *rt, const t_yx coords, t_ray ray);
 static unsigned int		ft_rand(const int x);
 static unsigned int		ft_rand2(const int x, const int y);

@@ -37,7 +37,7 @@ static void		ft_check_collisions_2(__global t_rt *rt, __global t_light *l, t_ray
 static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 {
 	int			i = -1;
-	
+
 	while (++i < rt->nb_obj)
 	{
 		if (rt->objects[i].type == SPHERE)
@@ -52,6 +52,8 @@ static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 		{
 			ray->id = i;
 			ray->dist = ray->t;
+			if (rt->objects[i].negative)
+				ray->t = check_col_neg(rt, ray, i);
 		}
 	}
 	if (rt->lights)
