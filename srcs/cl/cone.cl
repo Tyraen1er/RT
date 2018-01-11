@@ -24,8 +24,8 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 		.delta = e.b * e.b - 4.0 * e.a * e.c
 	};
 
-//	if (e.delta < 0.0 && !dot(ray->dir, obj.rot))
-//		return ;
+	if (e.delta < 0.0 && !dot(ray->dir, obj.rot))
+		return ;
 	e.c = 0 < (-e.b + sqrt(e.delta)) / (2 * e.a) ? (-e.b + sqrt(e.delta)) / (2 * e.a) : ray->t;
 	e.delta = 0 < (-e.b - sqrt(e.delta)) / (2 * e.a) ? (-e.b - sqrt(e.delta)) / (2 * e.a) : ray->t;
 	if (e.delta < e.c)
@@ -34,11 +34,11 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 		e.c = e.delta;
 		e.delta = e.b;
 	}
-	if (obj.size.y)
+	if (obj.size.y && !obj.size.z)
 	{
 		if (dot(ray->dir, obj.rot))
 		{
-			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y, 0, 0}}, &tmpray);
+			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y / 2 * tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
 			if (0 < tmpray.t)
 			{
 				if (tmpray.t < e.delta)
@@ -51,7 +51,40 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 				}
 			}
 			tmpray.t = ray->t;
-			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y, 0, 0}}, &tmpray);
+			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y / 2 * tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
+			if (0 < tmpray.t)
+			{
+				if (tmpray.t < e.delta)
+					e.delta = tmpray.t;
+				if (e.delta < e.c)
+				{
+					e.b = e.c;
+					e.c = e.delta;
+					e.delta = e.b;
+				}
+			}
+		}
+		if (obj.size.y / 2 < length(ray->pos + ray->dir * e.c - obj.pos))
+			return ;
+	}
+	else if (obj.size.y && obj.size.z)
+	{
+		if (dot(ray->dir, obj.rot))
+		{
+			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y / 2* tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
+			if (0 < tmpray.t)
+			{
+				if (tmpray.t < e.delta)
+					e.delta = tmpray.t;
+				if (e.delta < e.c)
+				{
+					e.b = e.c;
+					e.c = e.delta;
+					e.delta = e.b;
+				}
+			}
+			tmpray.t = ray->t;
+			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y / 2* tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
 			if (0 < tmpray.t)
 			{
 				if (tmpray.t < e.delta)
