@@ -6,7 +6,7 @@
 #    By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/02/18 18:32:53 by bmoiroud          #+#    #+#              #
-#    Updated: 2017/10/18 17:47:34 by bmoiroud         ###   ########.fr        #
+#    Updated: 2017/12/07 14:03:05 by bmoiroud         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRC_NAME = cl.c \
 		   ft_check.c \
 		   ft_errors.c \
 		   ft_get_data.c \
+		   ft_get_objects.c \
 		   ft_init.c \
 		   ft_move.c \
 		   ft_parse.c \

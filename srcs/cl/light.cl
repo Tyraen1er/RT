@@ -6,14 +6,13 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/08/15 14:27:12 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/05 17:49:51 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/04 16:48:08 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
 #include "normale.cl"
 #include "shadows.cl"
-//#include "noise.cl"
 
 static double	ft_calc_light(__global t_rt *rt, __global t_object *obj, \
 				__global t_light *l, const t_ray *ray, __constant double *rand)
@@ -23,7 +22,7 @@ static double	ft_calc_light(__global t_rt *rt, __global t_object *obj, \
 	const t_vector	b = ft_normale(rt, obj, a, ray, rand);
 	const t_vector	c = normalize(v - rt->m[0]);
 	double			light = min(max(dot(v, b) * (l->intensity / 100.0), 0.0), 1.3);
-	double			tmp = pow(dot(b, c), 50.0) * dot(b, v) * (l->intensity / 100.0);
+	const double	tmp = pow(dot(b, c), 50.0) * dot(b, v) * (l->intensity / 100.0);
 
 	light = ((obj->refract) ? (1.0 * l->intensity / 100.0) : (light));
 	if (tmp > 0.0000001 && obj->type != PLANE)
@@ -45,5 +44,5 @@ static double	ft_light(__global t_rt *rt, const t_ray *ray, __constant double *r
 			light += ft_calc_light(rt, &rt->objects[ray->id], &rt->lights[i], ray, rand);
 	else
 		light = rt->lights[ray->id - rt->nb_obj].intensity / 100.0;
-	return (min(max(light, 0.06), 2.0));
+	return (min(max(light, 0.06), 1.0 + rt->objects[ray->id].spec));
 }

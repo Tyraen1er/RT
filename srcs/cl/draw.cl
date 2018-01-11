@@ -6,13 +6,13 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/04 14:38:00 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/02 17:51:27 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/07 17:06:28 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
 
-void	ft_putpixel(t_win *win, int y, int x, int color)
+static void		ft_putpixel(t_win *win, int y, int x, int color)
 {
 	int		i;
 
@@ -26,7 +26,7 @@ void	ft_putpixel(t_win *win, int y, int x, int color)
 	}
 }
 
-int		ft_texture(t_rt *rt)
+static int		ft_texture(t_rt *rt)
 {
 	t_vector	hit;
 
@@ -41,7 +41,7 @@ int		ft_texture(t_rt *rt)
 	return (255 << 16 | 255 << 8 | 255);
 }
 
-int		ft_get_obj_color(t_rt *rt, double l)
+static int		ft_get_obj_color(t_rt *rt, double l)
 {
 	int		color;
 	int		red;
@@ -54,7 +54,7 @@ int		ft_get_obj_color(t_rt *rt, double l)
 	if (i < 0)
 		return (0);
 	if (i >= rt->nb_obj)
-		return ((int)(255 * l) << 16 | (int)(255 * l) << 8 | (int)(255 * l));
+		return ((int)(255 * max(l, 1.0)) << 16 | (int)(255 * max(l, 1.0)) << 8 | (int)(255 * max(l, 1.0)));
 	rt->ray.bounces = MAX_BOUNCES;
 	if (rt->objects[i].reflect > 0)
 		color = ft_reflection(rt);
@@ -65,11 +65,8 @@ int		ft_get_obj_color(t_rt *rt, double l)
 	else
 		color = rt->objects[i].color;
 	l = ft_limits(l, 0.0, 2.0);
-	blue = ft_limits(ft_limits(((color & 0xff) * l), 0.0, 255.0) + \
-						ft_limits(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0);
-	green = ft_limits(ft_limits(((color >> 8 & 0xff) * l), 0.0, 255.0) + \
-						ft_limits(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0);
-	red = ft_limits(ft_limits(((color >> 16 & 0xff) * l), 0.0, 255.0) + \
-						ft_limits(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0);
+	blue = min(max(min(max(((color & 0xff) * l), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
+	green = min(max(min(max(((color >> 8 & 0xff) * l), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
+	red = min(max(min(max(((color >> 16 & 0xff) * l), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
 	return (red << 16 | green << 8 | blue);
 }

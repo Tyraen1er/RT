@@ -6,16 +6,16 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/31 17:12:34 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/05 17:20:50 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/08 18:49:24 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
 
-static void		ft_sphere_col(const t_object obj, t_ray *ray, __global t_rt *rt)
+static void			ft_sphere_col(const t_object obj, t_ray *ray)
 {
 	const t_vector		dist = ray->pos - obj.pos;
-	t_equation	e = {
+	t_equation			e = {
 		.a = dot(ray->dir, ray->dir), \
 		.b = 2 * dot(ray->dir, dist), \
 		.c = dot(dist, dist) - (obj.size.x * obj.size.x), \
@@ -34,4 +34,19 @@ static void		ft_sphere_col(const t_object obj, t_ray *ray, __global t_rt *rt)
 	}
 	if (e.c > 0.0000001 && e.c < ray->t)
 		ray->t = e.c;
+}
+
+static double2		ft_sphere_text_coords(const t_vector hit, const __global t_object *obj)
+{
+	const t_vector	n = normalize(hit - obj->pos);
+	double2			c = {
+		(obj->size.x) + atan2(n.y, n.x) / M_PI_2,	\
+		(obj->size.x) - asin(n.z) / M_PI
+	};
+	
+	c.x -= (c.x < 0.0) ? 1.0 : 0.0;
+	c.x += (c.x > 1.0) ? 1.0 : 0.0;
+	c.y -= (c.y < 0.0) ? 1.0 : 0.0;
+	c.y += (c.y > 1.0) ? 1.0 : 0.0;
+	return (c);
 }

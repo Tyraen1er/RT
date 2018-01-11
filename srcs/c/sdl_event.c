@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 15:25:40 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/10/31 15:58:52 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/11/09 15:23:41 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ void		ft_move(t_key *keys, t_eye *eye, t_vector *m)
 		ft_rotate_y(eye, m, 1);
 	else if (keys->q)
 		ft_rotate_y(eye, m, -1);
+	if (keys->x)
+		ft_rotate_z(eye, m, 1);
+	else if (keys->c)
+		ft_rotate_z(eye, m, -1);
 }
 
 static int	sdl_keyboard(t_key *keys, t_eye *eye, t_vector *m, t_rt *rt)
@@ -53,6 +57,10 @@ static int	sdl_keyboard(t_key *keys, t_eye *eye, t_vector *m, t_rt *rt)
 		keys->e = 1;
 	else if (state[SDL_SCANCODE_Q])
 		keys->q = 1;
+	if (state[SDL_SCANCODE_DOWN])
+		keys->x = 1;
+	else if (state[SDL_SCANCODE_UP])
+		keys->c = 1;
 	if (state[SDL_SCANCODE_1])
 		rt->effects = (rt->effects == 1) ? 0 : 1;
 	ft_move(keys, eye, m);
@@ -60,15 +68,15 @@ static int	sdl_keyboard(t_key *keys, t_eye *eye, t_vector *m, t_rt *rt)
 		state[SDL_SCANCODE_A] || state[SDL_SCANCODE_D] || \
 		state[SDL_SCANCODE_SPACE] || state[SDL_SCANCODE_LCTRL] || \
 		state[SDL_SCANCODE_E] || state[SDL_SCANCODE_Q] || \
-		state[SDL_SCANCODE_1] || state[SDL_SCANCODE_2])
+		state[SDL_SCANCODE_1] || state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_DOWN])
 		return (1);
 	return (0);
 }
 
 int			sdl_events(t_sdl *sdl, t_key *keys, t_rt *rt)
 {
-	if (!(SDL_WaitEvent(&sdl->event)))
-		errors(ERR_SDL, "SDL_WaitEvent failed --");
+	// if (!(SDL_WaitEvent(&sdl->event)))
+	// 	errors(ERR_SDL, "SDL_WaitEvent failed --");
 	if (SDL_PollEvent(&sdl->event))
 	{
 		if (sdl->event.key.keysym.sym == SDLK_ESCAPE || \

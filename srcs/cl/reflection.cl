@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 13:40:30 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/04 17:45:52 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/04 18:31:45 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "refraction.cl"
 #include "transparency.cl"
 
-void	ft_reflect_ray(__global t_rt *rt, t_ray *ray, __constant double *rand)
+static void		ft_reflect_ray(__global t_rt *rt, t_ray *ray, __constant double *rand)
 {
 	t_vector	hit = ray->pos + ray->dir * ray->dist;
 	t_vector	n = ft_normale(rt, &rt->objects[ray->id], hit, ray, rand);
@@ -28,7 +28,7 @@ void	ft_reflect_ray(__global t_rt *rt, t_ray *ray, __constant double *rand)
 	ray->bounces--;
 }
 
-t_color	ft_ref_color(__global t_rt *rt, t_ray *ray, const double ref, __constant double *rand)
+static t_color	ft_ref_color(__global t_rt *rt, t_ray *ray, const double ref, __constant double *rand)
 {
 	t_color		c;
 	const int	id = ray->id;
@@ -42,14 +42,14 @@ t_color	ft_ref_color(__global t_rt *rt, t_ray *ray, const double ref, __constant
 	return (c);
 }
 
-t_color	ft_reflection(__global t_rt *rt, t_ray *ray, __constant double *rand)
+static t_color	ft_reflection(__global t_rt *rt, t_ray *ray, __constant double *rand)
 {
 	double			light = 0.0;
 	double			ref = (rt->objects[ray->id].reflect > 0.0) ? rt->objects[ray->id].reflect : 100.0;
 	double			reflection = ref;
 	t_color			c_ref;
 	t_color			c_obj;
-	const double	l2 = ft_light(rt, ray, rand) * (100.0 - ref) / 100.0;
+	const double	l2 = min(max(ft_light(rt, ray, rand), 0.0), 2.0) * (100.0 - ref) / 100.0;
 	
 	c_obj = ft_color(rt, *ray, 1.0, rand);
 	while ((((rt->objects[ray->id].reflect && ray->bounces) || \
@@ -71,6 +71,7 @@ t_color	ft_reflection(__global t_rt *rt, t_ray *ray, __constant double *rand)
 			c_ref = ft_transparency(rt, rt->objects[ray->id].transp / 100.0, ray, rand);
 	}
 	light += ft_light(rt, ray, rand);
+	// printf("%d %d %d %d %f\n", c_obj.r, c_obj.g, c_obj.b, c_obj.c, light);
 	c_ref.r = min(max(((min(max((c_ref.r * light) + min(max(255.0 * (light - 1.0), \
 			0.0), 255.0), 0.0), 255.0) * reflection / 100.0) + (c_obj.r * l2 * \
 			((100.0 - reflection) / 100.0))), 0.0), 255.0);

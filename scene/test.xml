@@ -1,0 +1,49 @@
+<scene>
+	<camera>
+		<position>0,0,0</position>
+		<orientation>1,0,0</orientation>
+	</camera>
+	<plane>
+		<position>200,10,0</position>
+		<color>250,0,0</color>
+		<orientation>1,0,0</orientation>
+	</plane>
+	<!-- <plane> -->
+		<!-- <position>40,0,0</position> -->
+		<!-- <color>100,100,100</color> -->
+		<!-- <orientation>0,1,0</orientation> -->
+	<!-- </plane> -->
+	<!-- <sphere> -->
+		<!-- <position>30,10,0</position> -->
+		<!-- <size>15</size> -->
+		<!-- <color>200,0,0</color> -->
+		<!-- <texture>chessboard</texture> -->
+		<!-- <specularity>-0.1</specularity> -->
+	<!-- </sphere> -->
+	<!-- <cylinder> -->
+		<!-- <position>30,-100,-80</position> -->
+		<!-- <orientation>0,1,0</orientation> -->
+		<!-- <size>10</size> -->
+		<!-- <color>150,150,150</color> -->
+		<!-- <specularity>-0.1</specularity> -->
+		<!-- <color>0,200,0</color> -->
+		<!-- <texture>bricks</texture> -->
+	<!-- </cylinder> -->
+	<!sphere>
+		<!position>30,10,-40</position>
+		<!-- <orientation>0,1,0</orientation> -->
+		<!size>12</size>
+		<!color>0,60,150</color>
+		<!-- <texture>bricks</texture> -->
+		<!-- <specularity>-0.1</specularity> -->
+		<!-- <texture>chessboard</texture> -->
+		<!-- <texture>wood</texture> -->
+		<!-- <texture>marble</texture> -->
+		<!texture>perlin</texture>
+		<!noise>16,0.1,0.5,1</noise>
+	<!/sphere>
+	<light>
+		<position>10,0,15</position>
+		<intensity>90</intensity>
+	</light>
+</scene>

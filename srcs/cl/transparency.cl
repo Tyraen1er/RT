@@ -6,13 +6,13 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 16:31:26 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/04 17:46:29 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/04 18:33:07 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
 
-t_color				ft_transp_color(__global t_rt *rt, t_ray *ray, __constant double *rand)
+static t_color		ft_transp_color(__global t_rt *rt, t_ray *ray, __constant double *rand)
 {
 	const int		id = ray->id;
 
@@ -32,7 +32,7 @@ t_color				ft_transp_color(__global t_rt *rt, t_ray *ray, __constant double *ran
 	return ((t_color){0xff, 0xff, 0xff, 0xffffffff});
 }
 
-t_color				ft_transparency(__global t_rt *rt, const double transp, \
+static t_color		ft_transparency(__global t_rt *rt, const double transp, \
 											t_ray *ray, __constant double *rand)
 {
 	t_color			c;

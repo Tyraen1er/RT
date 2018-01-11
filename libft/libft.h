@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/07 16:07:36 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/03/23 16:57:57 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/01 14:43:17 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,6 @@ char				*ft_itoa_base(intmax_t n, int base, unsigned long l);
 int					ft_atoi_base(char *str, int base);
 int					ft_pow(int n, int power);
 double				ft_fpow(double n, int power);
+double				ft_atod(char *str);
 
 #endif

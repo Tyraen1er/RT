@@ -6,7 +6,7 @@
 #    By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/09 18:43:48 by bmoiroud          #+#    #+#              #
-#    Updated: 2017/03/20 16:57:52 by bmoiroud         ###   ########.fr        #
+#    Updated: 2017/12/01 14:42:22 by bmoiroud         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ SRCS =	ft_strlen.c	    ft_strdup.c      ft_strcpy.c    ft_strncpy.c    \
         ft_putnbr.c     ft_putnbr_fd.c   ft_putendl.c   ft_putendl_fd.c \
 																		\
         ft_atoi.c       ft_itoa.c        ft_atoi_base.c	ft_itoa_base.c	\
-		ft_pow.c		ft_fpow.c										\
+		ft_pow.c		ft_fpow.c		 ft_atod.c						\
 																		\
 		ft_lstadd.c     ft_lstdel.c	     ft_lstdelone.c ft_lstiter.c	\
 		ft_lstiter.c    ft_lstnew.c	     ft_lstmap.c					\

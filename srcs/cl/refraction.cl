@@ -6,13 +6,13 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/07 14:35:41 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/04 17:44:45 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/04 18:32:01 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
 
-void		ft_refract_ray(t_ray *ray, const double n1, const double n2, \
+static void		ft_refract_ray(t_ray *ray, const double n1, const double n2, \
 															const t_vector n)
 {
 
@@ -73,7 +73,7 @@ void		ft_refract_ray(t_ray *ray, const double n1, const double n2, \
 	ray->t = ray->dist;*/
 }
 
-t_color		ft_refract_color(__global t_rt *rt, const double n1, const \
+static t_color		ft_refract_color(__global t_rt *rt, const double n1, const \
 														double n2, t_ray *ray)
 {
 	const int		id = ray->id;

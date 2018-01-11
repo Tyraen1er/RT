@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/27 15:17:23 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/10/22 15:09:30 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/04 14:59:16 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int		ft_check_numbers(char *str, int j)
 	if (j == 0)
 	{
 		while (str[++i])
-			if ((str[i] < 48 || str[i] > 57) && str[i] != '-')
+			if ((str[i] < 48 || str[i] > 57) && str[i] != '-' && str[i] != '.')
 				return (0);
 	}
 	else if (j == 1)
 	{
 		while (str[++i])
-			if ((str[i] < 48 || str[i] > 57) && str[i] != '-' && str[i] != ' ')
+			if ((str[i] < 48 || str[i] > 57) && str[i] != '-' && str[i] != ',' && str[i] != '.')
 				return (0);
 	}
 	else if (j == 2)
@@ -72,14 +72,15 @@ void	ft_default_value(t_object *objs, t_rt *rt)
 			objs[i].rot = (t_vector){1, 0, 0};
 		if (objs[i].rot.x == 0 && objs[i].rot.y == 0 && objs[i].rot.z == 0 && \
 														objs[i].type != SPHERE)
-			ft_error(2);
+			ft_error(2, 0);
+		
 	}
 	i = -1;
 	while (++i < rt->nb_light)
 		if (rt->lights[i].intensity < 0)
 			rt->lights[i].intensity = INTENSITY;
 	if (ft_vector_len(rt->eye.rot) == 0.0)
-		ft_error(2);
+		ft_error(2, 0);
 }
 
 int		ft_countword(char *str, char c)
@@ -109,7 +110,7 @@ int		ft_check_color(char *str)
 	}
 	else if (ft_check_numbers(str, 1) == 0)
 		return (-1);
-	else if (ft_countword(str, ' ') == 2)
+	else if (ft_countword(str, ',') == 2)
 		return (1);
 	else
 		return (2);

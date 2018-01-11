@@ -6,26 +6,26 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 16:15:27 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/10/16 18:50:53 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/01 18:04:03 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	ft_error(int error)
+void	ft_error(int error, int line)
 {
 	if (error == 0)
 		ft_putstr("usage: ./rt <fichier>\n");
 	else if (error == 1)
 		ft_putstr("error: invalid file\n");
 	else if (error == 2)
-		ft_putstr("error: invalid scene\n");
+	{
+		ft_putstr("invalid scene, error line : ");
+		ft_putnbr(line + 1);
+		ft_putchar('\n');
+	}
 	else if (error == 3)
 		ft_putstr("malloc error\n");
-	else if (error == 4)
-		ft_putstr("thread creation error\n");
-	else if (error == 5)
-		ft_putstr("thread error\n");
 	exit(EXIT_FAILURE);
 }
 

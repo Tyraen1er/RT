@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/13 15:05:50 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/02 17:52:20 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/04 18:32:51 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 	ft_refract_ray(tmp, tmp->objects[i].refract, 1.0, n);
 }*/
 
-double		ft_shadow_col(t_rt *tmp, t_ray *r, __global t_rt *rt)
+static double	ft_shadow_col(t_rt *tmp, t_ray *r)
 {
 	int			i = -1;
 	t_ray		ray = *r;
@@ -41,13 +41,13 @@ double		ft_shadow_col(t_rt *tmp, t_ray *r, __global t_rt *rt)
 	{
 		ray.t = r->dist;
 		if (tmp->objects[i].type == SPHERE)
-			ft_sphere_col(tmp->objects[i], &ray, rt);
+			ft_sphere_col(tmp->objects[i], &ray);
 		else if (tmp->objects[i].type == PLANE)
-			ft_plane_col(tmp->objects[i], &ray, rt);
+			ft_plane_col(tmp->objects[i], &ray);
 		else if (tmp->objects[i].type == CONE)
-			ft_cone_col(tmp->objects[i], &ray, rt);
+			ft_cone_col(tmp->objects[i], &ray);
 		else if (tmp->objects[i].type == CYLINDER)
-			ft_cyl_col(tmp->objects[i], &ray, rt);
+			ft_cyl_col(tmp->objects[i], &ray);
 		if (ray.t < r->dist && ray.t > 0.0 && !objs[i].refract && !objs[i].transp)
 			return (1.0);
 		if (ray.t < r->dist && ray.t > 0.0 && objs[i].transp)
@@ -56,7 +56,7 @@ double		ft_shadow_col(t_rt *tmp, t_ray *r, __global t_rt *rt)
 	return (0.0);
 }
 
-double		ft_soft_shadows(__global t_rt *rt, const t_vector hit, __global t_light *light, __constant double *rand)
+static double	ft_soft_shadows(__global t_rt *rt, const t_vector hit, __global t_light *light, __constant double *rand)
 {
 	t_vector		v;
 	t_rt			save = *rt;
@@ -76,12 +76,12 @@ double		ft_soft_shadows(__global t_rt *rt, const t_vector hit, __global t_light 
 		tmp.t = tmp.dist;
 		tmp.dir = normalize(v);
 		tmp.pos = hit;
-		l += ft_shadow_col(&save, &tmp, rt);
+		l += ft_shadow_col(&save, &tmp);
 	}
 	return (l / d);
 }
 
-double		ft_hard_shadows(__global t_rt *rt, const t_vector hit, __global t_light *light)
+static double	ft_hard_shadows(__global t_rt *rt, const t_vector hit, __global t_light *light)
 {
 	const t_vector	v = light->pos - hit;
 	t_rt		save = *rt;
@@ -92,5 +92,5 @@ double		ft_hard_shadows(__global t_rt *rt, const t_vector hit, __global t_light 
 	r2.t = r2.dist;
 	r2.dir = normalize(v);
 	r2.pos = hit;
-	return (ft_shadow_col(&save, &r2, rt));
+	return (ft_shadow_col(&save, &r2));
 }

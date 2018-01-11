@@ -6,22 +6,22 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/23 14:52:43 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/11/05 17:58:36 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2017/12/21 19:04:16 by eferrand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void		ft_translation(t_vector *pos, int *fd)
-{
-	t_vector	v;
+// void		ft_translation(t_vector *pos, int *fd)
+// {
+// 	t_vector	v;
 
-	// v.set = 0;
-	// if (pos->set == 0)
-	// 	ft_error(2);
-	ft_get_coord(&v, fd);
-	*pos = ft_add_vector(*pos, v);
-}
+// 	// v.set = 0;
+// 	// if (pos->set == 0)
+// 	// 	ft_error(2);
+// 	ft_get_coord(&v, fd);
+// 	*pos = ft_add_vector(*pos, v);
+// }
 
 double	ft_limits(double nb, double min, double max)
 {
@@ -42,39 +42,39 @@ void		print_struct(t_rt rt)
 {
 	int		i = -1;
 
-	printf("%zu\n", sizeof(t_vector));
-	printf("%zu\n", sizeof(t_object));
-	printf("%zu\n", sizeof(t_light));
-	printf("%zu\n", sizeof(t_eye));
-	printf("%zu\n", sizeof(t_color));
-	printf("%zu\n", sizeof(t_vector));
+	printf("sizeof(t_vector): %zu\n", sizeof(t_vector));
+	printf("sizeof(t_object): %zu\n", sizeof(t_object));
+	printf("sizeof(t_light): %zu\n", sizeof(t_light));
+	printf("sizeof(t_eye): %zu\n", sizeof(t_eye));
+	printf("sizeof(t_color): %zu\n", sizeof(t_color));
+	printf("sizeof(t_vector): %zu\n", sizeof(t_vector));
 	printf("%zu\n\n", sizeof(t_rt));
-	printf("------ C -------\n");
-	printf("cam---------\n");
+	printf("------ C -------\n\n");
+	printf("cam---------\n\n");
 	printf("pos: %f %f %f\n", rt.eye.pos.x, rt.eye.pos.y, rt.eye.pos.z);
 	printf("rot: %f %f %f\n", rt.eye.rot.x, rt.eye.rot.y, rt.eye.rot.z);
 	printf("fov: %f zoom: %f aspect: %f\n", rt.eye.fov, rt.eye.zoom, rt.eye.aspect);
-	printf("effects: %d\n", rt.effects);
-	printf("objs--------\n");
+	printf("effects: %d\n\n", rt.effects);
+	printf("objs--------\n\n");
 	while (++i < rt.nb_obj)
 	{
 		printf("id: %d\n", i);
 		printf("pos: %f %f %f\n", rt.objects[i].pos.x, rt.objects[i].pos.y, rt.objects[i].pos.z);
 		printf("rot: %f %f %f\n", rt.objects[i].rot.x, rt.objects[i].rot.y, rt.objects[i].rot.z);
 		printf("size: %f %f %f\n", rt.objects[i].size.x, rt.objects[i].size.y, rt.objects[i].size.z);
-		printf("refract: %f reflect: %f\n", rt.objects[i].refract, rt.objects[i].reflect);
+		printf("refract: %f reflect: %f spec: %f\n", rt.objects[i].refract, rt.objects[i].reflect, rt.objects[i].spec);
 		printf("type: %d\n", rt.objects[i].type);
 		printf("perturbation normale: %f\n", rt.objects[i].np);
 		printf("texture procedurale: %d\n", rt.objects[i].p_texture);
-		printf("color: %d\nrgb: %d %d %d\n", rt.objects[i].color.c, rt.objects[i].color.r, rt.objects[i].color.g, rt.objects[i].color.b);
+		printf("color: %d\nrgb: %d %d %d\n\n", rt.objects[i].color.c, rt.objects[i].color.r, rt.objects[i].color.g, rt.objects[i].color.b);
 	}
 	i = -1;
-	printf("lgts--------\n");
+	printf("lgts--------\n\n");
 	while (++i < rt.nb_light)
 	{
 		printf("id: %d\n", i);
 		printf("pos: %f %f %f\n", rt.lights[i].pos.x, rt.lights[i].pos.y, rt.lights[i].pos.z);
-		printf("intensity: %f\n", rt.lights[i].intensity);
+		printf("intensity: %f\n\n", rt.lights[i].intensity);
 	}
 	printf("m[3]--------\n");
 	printf("m[i]: %f %f %f\n", rt.m[0].x, rt.m[0].y, rt.m[0].z);
@@ -119,23 +119,13 @@ int		main(int ac, char **av)
 	int		i;
 
 	i = -1;
-	ft_bzero(&data, sizeof(t_data));
+	ft_init_struct(&data);
 	if (ac < 2 || ac > 2)
-		ft_error(0);
+		ft_error(0, 0);
 	else if (av[1] == NULL)
-		ft_error(1);
+		ft_error(1, 0);
 	ft_parse(av[1], &data);
 	ft_init_data(&data);
-	// while (++i < data.rt.nb_obj)
-	// 	if (data.rt.objects[i].type == PLANE)
-	// 		data.rt.objects[i].reflect = 100.0;
-		// if (data.rt.objects[i].type == SPHERE)
-			// data.rt.objects[2].refract = 1.6;
-			// data.rt.objects[0].p_texture = CHESSBOARD;
-			// data.rt.objects[1].np = 80.0;
-			// data.rt.objects[1].np = 100.0;
-			// data.rt.objects[1].size.y = 10;
-	// data.rt.shadows = 1;
 	data.rt.eye.aspect = 1.5;
 	data.rt.eye.fov = FOV;
 	data.rt.eye.zoom = ZOOM;
