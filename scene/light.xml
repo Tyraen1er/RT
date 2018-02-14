@@ -3,6 +3,12 @@
 		<position>0,0,0</position>
 		<orientation>1,0,0</orientation>
 	</camera>
+	<cylinder>
+		<position>50,-15,10</position>
+		<orientation>1,1,0</orientation>
+		<color>250,0,0</color>
+		<size>5,10</size>
+	</cylinder>
 	<cone>
 		<position>20,0,0</position>
 		<orientation>1,0,0</orientation>
@@ -15,31 +21,35 @@
 		<color>50,50,50</color>
 	</plane>
 	<cone>
-		<position>50,0,0</position>
+		<position>50,-15,0</position>
 		<orientation>1,1,0</orientation>
 		<color>250,0,0</color>
-		<size>44,10</size>
+		<size>44,10,1</size>
 	</cone>
-	<cylinder>
-		<position>50,0,10</position>
-		<orientation>1,1,0</orientation>
-		<color>250,0,0</color>
-		<size>5,10</size>
-	</cylinder>
 	<cone>
 		<position>50,15,0</position>
 		<orientation>0,0,1</orientation>
 		<color>0,250,0</color>
-		<size>44,10</size>
+		<size>44,0,1</size>
 	</cone>
+	<cube>
+		<position>40,0,-15</position>
+		<orientation>1,1,0</orientation>
+		<color>0,250,250</color>
+		<size>8</size>
+	</cube>
 	<cylinder>
-		<position>50,15,10</position>
+		<position>50,15,-10</position>
 		<orientation>0,0,1</orientation>
 		<color>0,250,0</color>
 		<size>5,10</size>
 	</cylinder>
 	<light>
+		<position>50,-10,-10</position>
+		<intensity>50</intensity>
+	</light>
+	<light>
 		<position>0,0,0</position>
-		<intensity>90</intensity>
+		<intensity>50</intensity>
 	</light>
 </scene>

@@ -34,6 +34,9 @@ static void		ft_plane_col(const t_object obj, t_ray *ray)
 			if (obj.size.x / 2 <= fabs(length(pos_hit)))
 				return ;
 		}
+		ray->coltype = PLANE;
+		ray->colpos = obj.pos;
+		ray->coldir = obj.rot;
 		ray->otherside = d;
 		ray->t = d;
 	}

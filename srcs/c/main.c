@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/23 14:52:43 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/21 19:04:16 by eferrand         ###   ########.fr       */
+/*   Updated: 2018/01/28 19:50:25 by eferrand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,13 @@ void		print_struct(t_rt rt)
 static void	main_loop(t_data *data)
 {
 	int		loop;
-	int		i;
-	int		j;
 
-	j = data->rt.nb_light;
-	i = data->rt.nb_obj;
 	loop = 2;
 	while (loop)
 	{
 		if (loop == EVENT_UPDATE)
 		{
-			// print_struct(data->rt);
+			//print_struct(data->rt);
 			cl_run(&data->cl, (size_t[WORK_DIM]){data->sdl.size.y, data->sdl.size.x}, \
 			4, (t_arg){data->sdl.draw_surface->pixels, sizeof(uint32_t) * \
 			data->sdl.size.y * data->sdl.size.x, CL_MEM_WRITE_ONLY}, \
@@ -116,9 +112,7 @@ static void	main_loop(t_data *data)
 int		main(int ac, char **av)
 {
 	t_data	data;
-	int		i;
 
-	i = -1;
 	ft_init_struct(&data);
 	if (ac < 2 || ac > 2)
 		ft_error(0, 0);

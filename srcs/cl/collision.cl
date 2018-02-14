@@ -14,6 +14,7 @@
 #include "sphere.cl"
 #include "plane.cl"
 #include "cone.cl"
+#include "cube.cl"
 #include "cylinder.cl"
 #include "negative.cl"
 
@@ -41,6 +42,9 @@ static void		ft_check_collisions_2(__global t_rt *rt, __global t_light *l, t_ray
 static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 {
 	int			i = -1;
+	t_vector	coldir = ray->coldir;
+	t_vector	colpos = ray->colpos;
+	int			coltype = ray->coltype;
 	
 	while (++i < rt->nb_obj)
 	{
@@ -52,10 +56,15 @@ static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 			ft_cone_col(rt->objects[i], ray);
 		else if (rt->objects[i].type == CYLINDER)
 			ft_cyl_col(rt->objects[i], ray);
+		else if (rt->objects[i].type == CUBE)
+			ft_cube_col(rt->objects[i], ray);
 		if (ray->t < ray->dist)
 		{
 			ray->id = i;
 			ray->dist = ray->t;
+			coldir = ray->coldir;
+			colpos = ray->colpos;
+			coltype = ray->coltype;
 			if (ray->id != 0)
 			{
 				// printf("7: %d\n", ray->id);
@@ -67,7 +76,10 @@ static void		ft_check_collisions(__global t_rt *rt, t_ray *ray)
 		// if (ray->id != 0)
 			// printf("7: %d\n", ray->id);
 	}
-	if (rt->objects[ray->id].negative)
+	ray->coldir = coldir;
+	ray->colpos = colpos;
+	ray->coltype = coltype;
+	if (ray->id != -1 && rt->objects[ray->id].negative)
 		check_col_neg(rt, ray, ray->id);
 	if (rt->nb_light)
 		ft_check_collisions_2(rt, rt->lights, ray);

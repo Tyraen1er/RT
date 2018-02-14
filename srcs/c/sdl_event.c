@@ -79,7 +79,7 @@ int			sdl_events(t_sdl *sdl, t_key *keys, t_rt *rt)
 	// 	errors(ERR_SDL, "SDL_WaitEvent failed --");
 	if (SDL_PollEvent(&sdl->event))
 	{
-		if (sdl->event.key.keysym.sym == SDLK_ESCAPE || \
+		if (sdl->event.key.keysym.scancode == SDL_SCANCODE_ESCAPE || \
 			sdl->event.window.type == SDL_WINDOWEVENT_CLOSE || \
 			sdl->event.type == SDL_QUIT)
 			exit(EXIT_SUCCESS);

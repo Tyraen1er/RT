@@ -45,15 +45,19 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME):
-	gcc -Wall -Wextra -Werror -c $(SRCS)
-	ar rc $(NAME) $(OBJS)
-	ranlib $(NAME)
+	@gcc -Wall -Wextra -Werror -c $(SRCS)
+	@echo "\033[0;32m[✓] Built C object"
+	@ar rc $(NAME) $(OBJS)
+	@ranlib $(NAME)
+	@echo "\033[0;31m[✓] Library done" $(NAME)
 
 clean:
-	rm -rf $(OBJS)
+	@rm -rf $(OBJS)
+	@echo "\033[0;33m[✓] Removed library object files"
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
+	@echo "\033[0;33m[✓] Removed" $(NAME)
 
 re: fclean all
 

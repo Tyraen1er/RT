@@ -48,9 +48,13 @@ static double	ft_shadow_col(t_rt *tmp, t_ray *r)
 			ft_cone_col(tmp->objects[i], &ray);
 		else if (tmp->objects[i].type == CYLINDER)
 			ft_cyl_col(tmp->objects[i], &ray);
-		if (ray.t < r->dist && ray.t > 0.0 && !objs[i].refract && !objs[i].transp)
+		else if (tmp->objects[i].type == CUBE)
+			ft_cube_col(tmp->objects[i], &ray);
+		if (ray.t < r->dist && tmp->objects[i].negative)
+			check_col_neg((__global t_rt*)tmp, &ray, i);
+		if (ray.id != -1 && ray.t < r->dist && ray.t > 0.0 && !objs[i].refract && !objs[i].transp)
 			return (1.0);
-		if (ray.t < r->dist && ray.t > 0.0 && objs[i].transp)
+		if (ray.id != -1 && ray.t < r->dist && ray.t > 0.0 && objs[i].transp)
 			return (1.0 - objs[i].transp / 100.0);
 	}
 	return (0.0);

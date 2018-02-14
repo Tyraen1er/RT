@@ -3,18 +3,17 @@
 		<position>0,0,0</position>
 		<orientation>1,0,0</orientation>
 	</camera>
-	<plane>
-		<position>100,0,0</position>
-		<orientation>1,0,0</orientation>
-		<color>50,50,50</color>
-	</plane>
-	<cone>
+	<cylinder>
 		<position>50,0,0</position>
-		<orientation>1,0,0</orientation>
-		<color>0,0,250</color>
+		<orientation>0,1,0</orientation>
+		<size>5,10</size>
+		<color>0,250,0</color>
 		<negative>1</negative>
-		<size>44,20</size>
-	</cone>
+	</cylinder>
+	<plane>
+		<position>50,0,0</position>
+		<color>250,0,0</color>
+	</plane>
 	<light>
 		<position>0,0,0</position>
 		<intensity>90</intensity>

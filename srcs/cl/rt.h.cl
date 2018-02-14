@@ -28,6 +28,7 @@
 # define PLANE			1
 # define CONE			2
 # define CYLINDER		3
+# define CUBE			4
 
 # define CHESSBOARD 	1
 # define BRICKS 		2
@@ -77,11 +78,14 @@ typedef struct		s_ray
 	t_vector		n;
 	t_vector		pos;
 	t_vector		dir;
+	t_vector		coldir;
+	t_vector		colpos;
 	double			t;
 	double			dist;
 	double			otherside;
 	int				id;
 	int				bounces;
+	int				coltype;
 }					t_ray;
 
 typedef struct		s_light
@@ -149,6 +153,7 @@ typedef struct		s_rt
 	int				effects;
 }					t_rt;
 
+static void				ft_cube_col(const t_object obj, t_ray *ray);
 static void 			 check_col_neg(__global t_rt *rt, t_ray *ray, int hit);
 void print_data_infos(__global t_rt *rt, const t_yx coords, t_ray ray);
 static unsigned int		ft_perlin(unsigned int i, const double x, const double y, const double z);

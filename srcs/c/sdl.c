@@ -37,6 +37,7 @@ void				sdl_init(t_sdl *sdl, const char *window_name)
 		errors(ERR_SDL, "SDL_CreateWindow failed --");
 	SDL_SetWindowMinimumSize(sdl->window, WIN_W, WIN_H);
 	sdl_init_window(sdl);
+	sdl_init_menus(sdl);
 }
 
 void				sdl_run(t_sdl *sdl)

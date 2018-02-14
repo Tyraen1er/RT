@@ -4,23 +4,22 @@
 		<orientation>1,0,0</orientation>
 	</camera>
 	<plane>
-		<position>200,0,0</position>
-		<orientation>1,0,0</orientation>
-		<color>50,50,50</color>
-	</plane>
-	<sphere>
 		<position>100,0,0</position>
 		<orientation>1,0,0</orientation>
+		<color>50,50,250</color>
+	</plane>
+	<plane>
+		<position>50,0,0</position>
+		<orientation>1,0,0</orientation>
+		<color>50,250,50</color>
+	</plane>
+	<cylinder>
+		<position>50,0,0</position>
+		<orientation>0,1,0</orientation>
 		<color>250,0,0</color>
-	</sphere>
-	<light>
-		<position>100,-50,0</position>
-		<intensity>90</intensity>
-	</light>
-	<light>
-		<position>100,0,50</position>
-		<intensity>90</intensity>
-	</light>
+		<negative>1</negative>
+		<size>10,20</size>
+	</cylinder>
 	<light>
 		<position>0,0,0</position>
 		<intensity>90</intensity>

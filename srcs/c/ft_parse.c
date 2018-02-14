@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/23 18:33:56 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/09 13:46:18 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/01/21 16:28:58 by eferrand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,8 @@ void	ft_get_data(char **tab, t_data *data, int line, int i)
 			ft_get_plane(tab, data, &i, &line);
 		else if (ft_strcmp(tab[i], "cone") == 0)
 			ft_get_cone(tab, data, &i, &line);
+		else if (ft_strcmp(tab[i], "cube") == 0)
+			ft_get_cube(tab, data, &i, &line);
 		else if (!ft_comment(tab[i]) || !tab[i + 1])
 			ft_error(2, line);
 	}

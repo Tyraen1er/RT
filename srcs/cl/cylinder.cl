@@ -46,18 +46,15 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 	{
 		e.c = 0 < (-e.b + sqrt(e.delta)) / (2 * e.a) ? (-e.b + sqrt(e.delta)) / (2 * e.a) : ray->t;
 		e.delta = 0 < (-e.b - sqrt(e.delta)) / (2 * e.a) ? (-e.b - sqrt(e.delta)) / (2 * e.a) : ray->t;
+		if (obj.size.y && obj.size.y / 2 < sqrt(pow(length(e.c * ray->dir + ray->pos - obj.pos), 2) - pow(obj.size.x, 2)))
+			e.c = ray->t;
+		if (obj.size.y && obj.size.y / 2 < sqrt(pow(length(e.delta * ray->dir + ray->pos - obj.pos), 2) - pow(obj.size.x, 2)))
+			e.delta = ray->t;
 		if (e.delta < e.c)
 		{
 			e.b = e.c;
 			e.c = e.delta;
 			e.delta = e.b;
-		}
-		else if (obj.size.y && obj.size.y / 2 < sqrt(pow(length(e.delta * ray->dir + ray->pos - obj.pos), 2) - pow(obj.size.x, 2)))
-			e.delta = ray->t;
-		if (obj.size.y && obj.size.y / 2 < sqrt(pow(length(e.c * ray->dir + ray->pos - obj.pos), 2) - pow(obj.size.x, 2)))
-		{
-			e.c = ray->t;
-			e.delta = ray->t;
 		}
 	}
 	else
@@ -65,12 +62,18 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 		e.c = ray->t;
 		e.delta = ray->t;
 	}
+	if (e.c != ray->t)
+	{
+		ray->coldir = obj.rot;
+		ray->colpos = obj.pos;
+		ray->coltype = obj.type;
+	}
 	if (obj.size.y)
 	{
 		if (dot(ray->dir, obj.rot))
 		{
-			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y, 0, 0}}, &tmpray);
-			if (0 < tmpray.t)
+			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.x * 2, 0, 0}, .negative = 1}, &tmpray);
+			if (0 < tmpray.t && tmpray.t < ray->t)
 			{
 				if (tmpray.t < e.delta)
 					e.delta = tmpray.t;
@@ -79,11 +82,14 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 					e.b = e.c;
 					e.c = e.delta;
 					e.delta = e.b;
+					ray->coldir = tmpray.coldir;
+					ray->colpos = tmpray.colpos;
+					ray->coltype = tmpray.coltype;
 				}
 			}
 			tmpray.t = ray->t;
-			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y, 0, 0}}, &tmpray);
-			if (0 < tmpray.t)
+			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.x * 2, 0, 0}, .negative = 1}, &tmpray);
+			if (0 < tmpray.t && tmpray.t < ray->t)
 			{
 				if (tmpray.t < e.delta)
 					e.delta = tmpray.t;
@@ -92,11 +98,14 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 					e.b = e.c;
 					e.c = e.delta;
 					e.delta = e.b;
+					ray->coldir = tmpray.coldir;
+					ray->colpos = tmpray.colpos;
+					ray->coltype = tmpray.coltype;
 				}
 			}
 		}
 	}
-	ray->otherside = (e.delta != ray->t) ? e.delta - e.c : 0.0;
+	ray->otherside = (e.delta != ray->t) ? e.delta : e.c;
 	if (e.c > 0.0000001 && e.c < ray->t)
 		ray->t = e.c;
 }

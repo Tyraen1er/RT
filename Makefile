@@ -23,17 +23,16 @@ SRC_NAME = cl.c \
 		   ft_move.c \
 		   ft_parse.c \
 		   ft_vector.c \
+		   ft_help.c \
 		   main.c \
 		   sdl_event.c \
 		   sdl.c
 
-SRC = $(addprefix ${SRCDIR}/, ${SRC_NAME})
+SRC = $(addprefix $(SRCDIR)/, $(SRC_NAME))
 
 OBJDIR = objs
 
-OBJ = $(addprefix ${OBJDIR}/, $(SRC_NAME:.c=.o))
-
-CC = gcc
+OBJ = $(addprefix $(OBJDIR)/, $(SRC_NAME:.c=.o))
 
 CFLAGS = -Wall -Werror -Wextra
 
@@ -48,23 +47,28 @@ INCLUDES = -I./includes/ -I./libft/ $(SDL)
 FRAMEWORKS = -framework OpenCL -rpath @loader_path/Frameworks \
 			 -framework SDL2 -framework SDL2_ttf -framework SDL2_image -F ./Frameworks
 
-all:${NAME}
+all:$(NAME)
 
-${NAME}: ${OBJ}
+$(NAME): $(OBJ)
 		@make -C libft/
-		@${CC} ${CFLAGS} ${INCLUDES} ${LIB} ${FRAMEWORKS} -o $@ $^
+		@echo "\033[0;34m--------------------------------"
+		@gcc $(CFLAGS) $(OBJ) $(INCLUDES) $(LIB) $(FRAMEWORKS) -o $@ 
+		@echo "\033[0;31m[✓] Linked C executable" $(NAME)
 
-${OBJDIR}/%.o: ${SRCDIR}/%.c
-		@/bin/mkdir -p ${OBJDIR}
-		@${CC} ${CFLAGS} ${INCLUDES} -c -o $@ $<
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+		@/bin/mkdir -p $(OBJDIR)
+		@gcc $(CFLAGS) -c $< -o $@ $(INCLUDES)
+		@echo "\033[0;32m[✓] Built C object" $@
 
 clean:
 		@make -C libft/ clean
-		@/bin/rm -Rf ${OBJDIR}
+		@/bin/rm -Rf $(OBJDIR)
+		@echo "\033[0;33m[✓] Removed object directory" $(OBJDIR)
 
 fclean: clean
 		@make -C libft/ fclean
-		@/bin/rm -f ${NAME}
+		@/bin/rm -f $(NAME)
+		@echo "\033[0;33m[✓] Removed executable" $(NAME)
 
 re: fclean all
 

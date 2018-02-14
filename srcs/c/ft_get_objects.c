@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 18:19:27 by bmoiroud          #+#    #+#             */
-/*   Updated: 2018/01/11 18:05:48 by eferrand         ###   ########.fr       */
+/*   Updated: 2018/01/23 19:50:29 by eferrand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,40 @@ void	ft_get_cylinder(char **tab, t_data *data, int *i, int *line)
 	if (j[1] == 0)
 	{
 		ft_putstr("cylinder size not set, ");
+		ft_error(2, *line);
+	}
+}
+
+void	ft_get_cube(char **tab, t_data *data, int *i, int *line)
+{
+	int		j[12];
+	int		k;
+
+	k = data->rt.nb_obj;
+	ft_bzero(&j, sizeof(j));
+	data->rt.objects[k].type = CUBE;
+	while(ft_strcmp(tab[++(*i)], "/cube") != 0)
+	{
+		data->rt.line = *line;
+		if (ft_strcmp(tab[*i], "-") == 0)
+			*line += 1;
+		else
+			ft_get_object(tab, data, i, j);
+	}
+	data->rt.nb_obj++;
+	if (j[0] == 0)
+	{
+		ft_putstr("cube position not set, ");
+		ft_error(2, *line);
+	}
+	if (j[1] == 0)
+	{
+		ft_putstr("cube size not set, ");
+		ft_error(2, *line);
+	}
+	if (j[9] != 0)
+	{
+		ft_putstr("you can't change the orientation of composite item <cube>\n");
 		ft_error(2, *line);
 	}
 }

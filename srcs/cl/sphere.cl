@@ -24,16 +24,22 @@ static void			ft_sphere_col(const t_object obj, t_ray *ray)
 
 	if (e.delta < 0.0)
 		return ;
-	e.c = (-e.b + sqrt(e.delta)) / (2.0 * e.a);
-	e.delta = (-e.b - sqrt(e.delta)) / (2.0 * e.a);
-	ray->otherside = e.delta - e.c;
+	e.c = (0 < e.c) ? (-e.b + sqrt(e.delta)) / (2.0 * e.a) : ray->t;
+	e.delta = (0 < e.delta) ? (-e.b - sqrt(e.delta)) / (2.0 * e.a) : ray->t;
 	if (e.c > e.delta)
 	{
-		ray->otherside = e.c - e.delta;
+		e.a = e.c;
 		e.c = e.delta;
+		e.delta = e.a;
 	}
+	ray->otherside = (e.delta != ray->t) ? e.delta : e.c;
 	if (e.c > 0.0000001 && e.c < ray->t)
+	{
+		ray->coldir = obj.rot;
+		ray->colpos = obj.pos;
+		ray->coltype = SPHERE;
 		ray->t = e.c;
+	}
 }
 
 static double2		ft_sphere_text_coords(const t_vector hit, const __global t_object *obj)

@@ -22,7 +22,7 @@
 ** 					initialize sdl window
 ** void		sdl_run(t_sdl *sdl);
 ** 					draw sdl->pixels to sdl->screen of sdl->window
-** void		cl_end(t_cl *cl);
+** void		sdl_end(t_sdl *sdl);
 ** 					terminate and free all sdl environment
 **
 ** void		sdl_init_window(t_sdl *sdl);
@@ -49,6 +49,7 @@ typedef struct			s_sdl
 	SDL_Window			*window;
 	SDL_Surface			*screen;
 	SDL_Surface			*draw_surface;
+	SDL_Surface			*help_menu;
 	SDL_Event			event;
 	t_yx				size;
 	uint32_t			*pixels;
@@ -59,5 +60,6 @@ void					sdl_run(t_sdl *sdl);
 void					sdl_end(t_sdl *sdl);
 
 void					sdl_init_window(t_sdl *sdl);
+void					sdl_init_menus(t_sdl *sdl);
 
 #endif

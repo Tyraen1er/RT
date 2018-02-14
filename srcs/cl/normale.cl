@@ -13,16 +13,16 @@
 #include "rt.h.cl"
 #include "perturbation.cl"
 
-static t_vector		ft_check_norm(t_vector n, __global t_rt *rt, __global t_object *o)
+static t_vector		ft_check_norm(t_vector n, __global t_rt *rt, const t_ray *o)
 {
-	if ((rt->eye.pos.y > o->pos.y && o->rot.y < 0) || \
-									(rt->eye.pos.y < o->pos.y && o->rot.y > 0))
+	if ((rt->eye.pos.y > o->colpos.y && o->coldir.y < 0) || \
+									(rt->eye.pos.y < o->colpos.y && o->coldir.y > 0))
 		n.y *= -1;
-	if ((rt->eye.pos.x < o->pos.x && o->rot.x > 0) || \
-									(rt->eye.pos.x > o->pos.x && o->rot.x < 0))
+	if ((rt->eye.pos.x < o->colpos.x && o->coldir.x > 0) || \
+									(rt->eye.pos.x > o->colpos.x && o->coldir.x < 0))
 		n.x *= -1;
-	if ((rt->eye.pos.z > o->pos.z && o->rot.z < 0) || \
-									(rt->eye.pos.z < o->pos.z && o->rot.z > 0))
+	if ((rt->eye.pos.z > o->colpos.z && o->coldir.z < 0) || \
+									(rt->eye.pos.z < o->colpos.z && o->coldir.z > 0))
 		n.z *= -1;
 	return (n);
 }
@@ -47,17 +47,17 @@ static t_vector		ft_normale(__global t_rt *rt, __global t_object *obj, \
 {
 	t_vector	v1;
 
-	if (obj->type == PLANE)
-		v1 = ft_check_norm(obj->rot, rt, obj);
-	else if (obj->type == SPHERE)
+	if (ray->coltype == PLANE || ray->coltype == CUBE)
+		v1 = ft_check_norm(obj->rot, rt, ray);
+	else if (ray->coltype == SPHERE)
 		v1 = hit - obj->pos;
 	else
 	{
-		if (ray->id != 0 && ray->bounces == -2)
+		//if (ray->id != 0 && ray->bounces == -2)
 			// printf("normale1 : %d\n", ray->id);
 		v1 = obj->rot * (dot(ray->dir, obj->rot) * ray->dist + \
 											dot(ray->pos - obj->pos, obj->rot));
-		if (obj->type == CONE)
+		if (ray->coltype == CONE)
 			v1 = v1 * (1.0 + pow(tan(obj->size.x / 180.0 / PI) , 2.0));
 		v1 = (hit - obj->pos) - v1;
 	}

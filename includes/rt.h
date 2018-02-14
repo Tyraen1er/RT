@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/23 14:54:15 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/12 18:21:30 by eferrand         ###   ########.fr       */
+/*   Updated: 2018/01/22 19:06:24 by eferrand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define PLANE			1
 # define CONE			2
 # define CYLINDER		3
+# define CUBE			4
 
 # define CHESSBOARD 	1
 # define BRICKS 		2
@@ -86,11 +87,14 @@ typedef struct		s_ray
 	t_vector		n;			//normale
 	t_vector		pos;
 	t_vector		dir;
+	t_vector		coldir;
+	t_vector		colpos;
 	double			t;			// distance parcourue
 	double			dist;		// distance parcourue
 	double			otherside;
 	int				id;			// id du truc touché
 	int				bounces;	// nombre de rebonds deja fais
+	int				coltype;
 }					t_ray;
 
 typedef struct		s_light
@@ -174,6 +178,8 @@ typedef struct		s_key
 	int				e;
 	int				x;
 	int				c;
+	int				i;
+	int				h;
 }					t_key;
 
 typedef struct		s_data
@@ -216,6 +222,7 @@ int				ft_get_noise(char **tab, t_noise *noise, int *i, int *line);
 int				ft_get_negative(char **tab, int *negative, int *i, int *line);
 void			ft_get_p_texture(t_object *obj, char *str, int *line);
 void			ft_get_object(char **tab, t_data *data, int *i, int j[10]);
+void			ft_get_cube(char **tab, t_data *data, int *i, int *line);
 void			ft_get_sphere(char **tab, t_data *data, int *i, int *line);
 void			ft_get_plane(char **tab, t_data *data, int *i, int *line);
 void			ft_get_cone(char **tab, t_data *data, int *i, int *line);

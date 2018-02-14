@@ -45,6 +45,8 @@ static t_ray	ft_init_ray(__global t_rt *rt, const t_yx coords, const t_yx size)
 
 static t_color	ft_color(__global t_rt *rt, const t_ray ray, const double l, __constant double *rand)
 {
+//	if (ray.id != -1 && ray.id != 0)
+//		printf("ray.t = %f\tray.id = %d\ttype = %s\n", ray.t, ray.id, (rt->objects[ray.id].type == 0 ? "SPHERE" : (rt->objects[ray.id].type == 1 ? "PLANE" : (rt->objects[ray.id].type == 2 ? "CONE" : (rt->objects[ray.id].type == 3 ? "CYLINDER" : "CUBE")))));
 	t_color	c;
 	int		color = (ray.id < rt->nb_obj) ? rt->objects[ray.id].color.c : -1;
 	
@@ -67,12 +69,12 @@ void			print_data_infos(__global t_rt *rt, const t_yx coords, t_ray ray)
 	(void)ray;
 	if (coords.x == 0 && coords.y == 0)
 	{
-		printf("sizeof(t_vector): %zu\n", sizeof(t_vector));
-		printf("sizeof(t_object): %zu\n", sizeof(t_object));
-		printf("sizeof(t_light): %zu\n", sizeof(t_light));
-		printf("sizeof(t_eye): %zu\n", sizeof(t_eye));
-		printf("sizeof(t_color): %zu\n", sizeof(t_color));
-		printf("sizeof(t_vector): %zu\n", sizeof(t_vector));
+		printf("sizeof(t_vector): %lu\n", sizeof(t_vector));
+		printf("sizeof(t_object): %lu\n", sizeof(t_object));
+		printf("sizeof(t_light): %lu\n", sizeof(t_light));
+		printf("sizeof(t_eye): %lu\n", sizeof(t_eye));
+		printf("sizeof(t_color): %lu\n", sizeof(t_color));
+		printf("sizeof(t_vector): %lu\n", sizeof(t_vector));
 		printf("------ CL -------\n");
 		printf("cam---------\n");
 		printf("pos: %f %f %f\n", rt->eye.pos.x, rt->eye.pos.y, rt->eye.pos.z);
@@ -123,10 +125,11 @@ __kernel void	core(__global uint *pixels, __global t_rt *rt, \
 	t_object	obj;
 	int			color;
 
-	// print_data_infos(rt, coords, ray);
+	//print_data_infos(rt, coords, ray);
 	ft_check_collisions(rt, &ray);
-	obj = rt->objects[ray.id];
-	if (rt->effects && (rt->objects[ray.id].reflect || rt->objects[ray.id].refract || rt->objects[ray.id].transp) && ray.id != -1)
+	if (ray.id != -1)
+		obj = rt->objects[ray.id];
+	if (ray.id != -1 && rt->effects && (rt->objects[ray.id].reflect || rt->objects[ray.id].refract || rt->objects[ray.id].transp))
 		color = ft_reflection(rt, &ray, rand).c;
 	else if (ray.id != -1)
 		color = ft_color(rt, ray, ft_light(rt, &ray, rand), rand).c;
