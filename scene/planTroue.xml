@@ -9,7 +9,7 @@
 	</plane>
 	<plane>
 		<position>50,0,0</position>
-		<color>250,0,0</color>
+		<color>50,50,50</color>
 	</plane>
 	<cylinder>
 		<position>50,0,0</position>

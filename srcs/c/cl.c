@@ -5,28 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/06/21 02:25:45 by agrumbac          #+#    #+#             */
-/*   Updated: 2017/11/05 17:43:33 by bmoiroud         ###   ########.fr       */
+/*   Created: 2017/06/21 02:25:45 by bmoiroud          #+#    #+#             */
+/*   Updated: 2018/03/01 14:23:55 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-
-void	print_build_log(t_cl *cl)
-{
-	size_t	size;
-	char	*log;
-	
-	clGetProgramBuildInfo(cl->program, cl->device_id, CL_PROGRAM_BUILD_LOG, 0, \
-																NULL, &size);
-	if ((log = (char *)malloc(size + 1)) == NULL)
-		errors(-1, "print_build_log malloc error --");
-	clGetProgramBuildInfo(cl->program, cl->device_id, CL_PROGRAM_BUILD_LOG, \
-															size, log, NULL);
-	ft_putchar('\n');
-	ft_putendl(log);
-	exit(EXIT_FAILURE);
-}
 
 static inline void	cl_init_program(t_cl *cl, const int nb_const)
 {
@@ -50,7 +34,6 @@ static inline void	cl_init_program(t_cl *cl, const int nb_const)
 		(const char **)&source_str_ptr, (const size_t *)&source_size, &ret);
 	ret ? errors(ERR_CL, "clCreateProgramWithSource failure --") : 0;
 	ret = clBuildProgram(cl->program, 1, &cl->device_id, CL_CC_FLAGS, 0, 0);
-	ret ? print_build_log(cl) : 0;
 	ret ? cl_error_log(cl, ret) : 0;
 	ret ? errors(ERR_CL, "clBuildProgram failure --") : 0;
 	cl->kernel = clCreateKernel(cl->program, CL_KERNEL_NAME, &ret);

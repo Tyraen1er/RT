@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/04 15:46:09 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/08 17:47:18 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/02/26 17:35:12 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,22 @@ static double2		ft_get_text_coords(const t_vector hit, __global \
 		return (ft_sphere_text_coords(hit, obj));
 	else if (obj->type == PLANE)
 		return (ft_plane_text_coords(hit, obj));
-	else if (obj->type == CONE)
-		return (ft_cyl_text_coords(hit, obj, ray));
 	else
-		return (ft_cyl_text_coords(hit, obj, ray));
+		return (ft_cyl_text_coords(hit, obj, ray, rand));
+}
+
+static double		ft_lerp(double d, t_vector v)
+{
+	const double	c1 = -1.0;
+	const double	c2 = -0.5;
+	const double	c3 = 0.5;
+	const double	c4 = 1.0;
+
+	if (d >= c1 && d < c2)
+		return (((v.x * (d - c1)) / (c2 - c1)) + ((v.y * (c2 - d)) / (c2 - c1)));
+	else if (d >= c2 && d < c3)
+		return (((v.y * (d - c2)) / (c3 - c2)) + ((v.x * (c3 - d)) / (c3 - c2)));
+	return (((v.x * (d - c3)) / (c4 - c3)) + ((v.z * (c4 - d)) / (c4 - c3)));
 }
 
 static t_color		ft_procedural_texture(__global t_rt *rt, t_ray ray, \
@@ -38,22 +50,10 @@ static t_color		ft_procedural_texture(__global t_rt *rt, t_ray ray, \
 	if (obj->p_texture == CHESSBOARD)
 		return (ft_chessboard(ft_get_text_coords(hit, obj, &ray, rand, rt), obj, ft_normale(rt, obj, hit, &ray, rand)));
 	else if (obj->p_texture == WOOD)
-		return (ft_wood(hit, obj, ft_normale(rt, obj, hit, &ray, rand), rand));
+		return (ft_wood(hit, obj));
 	else if (obj->p_texture == MARBLE)
-		return (ft_marble(hit, obj, ft_normale(rt, obj, hit, &ray, rand), rand));
+		return (ft_marble(hit, obj));
 	else if (obj->p_texture == BRICKS)
 		return (ft_bricks(ft_get_text_coords(hit, obj, &ray, rand, rt), &rand[(int)fmod(fabs(((hit.x * 10000000.0) + (hit.y * 10000000.0) + (hit.z * 10000000.0))), MAX_RAND) - 1], obj));
-	else if (obj->p_texture == PERLIN)
-	{
-		double	p = ft_perlin_noise(obj, hit, rand);
-		t_color	c = {
-			.b = min(max((int)(p * 255), 0), 255), \
-			.g = min(max((int)(p * 255), 0), 255), \
-			.r = min(max((int)(p * 255), 0), 255), \
-			.c = 0xff << 24 | c.b << 16 | c.g << 8 | c.r
-		};
-		return (c);
-	}
-		// return (ft_perlin_noise(rt, obj, hit, ft_normale(rt, obj, hit, &ray, rand), rand));
 	return ((t_color){0, 0, 0, 0});
 }

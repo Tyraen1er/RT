@@ -4,12 +4,6 @@
 		<orientation>3,-1,3</orientation>
 	</camera>
 	<plane>
-		<position>-10,0,0</position>
-		<orientation>0,1,0</orientation>
-		<color>100,100,100</color>
-		<size>10</size>
-	</plane>
-	<plane>
 		<position>0,0,0</position>
 		<orientation>0,1,0</orientation>
 		<color>100,100,100</color>

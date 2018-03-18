@@ -20,6 +20,7 @@
 		<position>50,0,0</position>
 		<size>10</size>
 		<color>0,250,0</color>
+		<reflection>100</reflection>
 	</cube>
 	<cube>
 		<position>50,0,15</position>

@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/30 15:11:15 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/10/25 15:37:53 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/08 15:05:45 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,4 @@ t_vector	ft_norm_vector(t_vector v)
 	v2.y = v.y / len;
 	v2.z = v.z / len;
 	return (v2);
-}
-
-t_vector	ft_scale_vector(t_vector v, double scale)
-{
-	v.x *= scale;
-	v.y *= scale;
-	v.z *= scale;
-	return (v);
-}
-
-double		ft_vector_len(t_vector v)
-{
-	return (sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
 }

@@ -6,11 +6,13 @@
 	<plane>
 		<position>11,0,0</position>
 		<orientation>1,0,0</orientation>
+		<reflection>80</reflection>
 		<color>100,100,100</color>
 	</plane>
 	<plane>
 		<position>-1,0,0</position>
 		<orientation>1,0,0</orientation>
+		<reflection>80</reflection>
 		<color>100,100,100</color>
 	</plane>
 	<light>

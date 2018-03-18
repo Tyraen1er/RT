@@ -6,29 +6,11 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/31 17:12:23 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/05 15:31:35 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/17 18:47:37 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
-
-/*
-static void			ft_cyl_col(const t_object obj, t_ray *ray)
-{
-	const t_vector	Dir = normalize(cross(ray->dir, obj->rot));
-	const double	dist = fabs(dot((ray->dir - obj.rot), Dir));
-
-	if (obj.size.x < dist)
-		return ;
-}
-*/
-
-/*
-double				*ft_sortd(double *list, int nb)
-{
-
-}
-*/
 
 static void			ft_cyl_col(const t_object obj, t_ray *ray)
 {
@@ -72,7 +54,7 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 	{
 		if (dot(ray->dir, obj.rot))
 		{
-			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.x * 2, 0, 0}, .negative = 1}, &tmpray);
+			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.x * 2, 0, 0}, .negative = obj.negative}, &tmpray);
 			if (0 < tmpray.t && tmpray.t < ray->t)
 			{
 				if (tmpray.t < e.delta)
@@ -88,7 +70,7 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 				}
 			}
 			tmpray.t = ray->t;
-			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.x * 2, 0, 0}, .negative = 1}, &tmpray);
+			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.x * 2, 0, 0}, .negative = obj.negative}, &tmpray);
 			if (0 < tmpray.t && tmpray.t < ray->t)
 			{
 				if (tmpray.t < e.delta)
@@ -110,10 +92,9 @@ static void			ft_cyl_col(const t_object obj, t_ray *ray)
 		ray->t = e.c;
 }
 	
-static double2		ft_cyl_text_coords(const t_vector hit, const __global t_object *obj, const t_ray *ray)
+static double2		ft_cyl_text_coords(const t_vector hit, const __global t_object *obj, const t_ray *ray, __constant double *rand)
 {
-	const t_vector	n = (hit - obj->pos) - (obj->rot * (dot(ray->dir, obj->rot) * \
-							ray->dist + dot(ray->pos - obj->pos, obj->rot)));
+	const t_vector		n = (hit - obj->pos) - (obj->rot * (dot(ray->dir, obj->rot) * ray->dist + dot(ray->pos - obj->pos, obj->rot)));
 	double2			c = {
 		atan2(n.x, n.z), \
 		hit.y + ((obj->p_texture == BRICKS) ? 100000 : 0)

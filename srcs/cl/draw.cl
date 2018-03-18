@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/04 14:38:00 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/07 17:06:28 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/17 16:52:19 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void		ft_putpixel(t_win *win, int y, int x, int color)
 	int		i;
 
 	i = 0;
-	if (x < IMG_W && y < IMG_H && x >= 0 && y >= 0)
+	if (x < WIN_W && y < WIN_H && x >= 0 && y >= 0)
 	{
 		i = win->linelen * y + x * (win->bpp / 8);
 		win->data[i] = color & 0xff;
@@ -58,15 +58,11 @@ static int		ft_get_obj_color(t_rt *rt, double l)
 	rt->ray.bounces = MAX_BOUNCES;
 	if (rt->objects[i].reflect > 0)
 		color = ft_reflection(rt);
-	else if (rt->objects[i].refract > 0)
-		color = ft_refraction(rt);
-	// else if (i == 0)
-	// 	color = ft_texture(rt);
 	else
 		color = rt->objects[i].color;
-	l = ft_limits(l, 0.0, 2.0);
-	blue = min(max(min(max(((color & 0xff) * l), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
-	green = min(max(min(max(((color >> 8 & 0xff) * l), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
-	red = min(max(min(max(((color >> 16 & 0xff) * l), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
+	l = min(max(l, 0.0), 2.0);
+	blue = min(max(min(max(((color & 0xff) * (l * BL)), 0.0, 255.0) + min(max(220.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
+	green = min(max(min(max(((color >> 8 & 0xff) * (l * GL)), 0.0, 255.0) + min(max(244.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
+	red = min(max(min(max(((color >> 16 & 0xff) * (l * RL)), 0.0, 255.0) + min(max(255.0 * (l - 1.0), 0.0, 255.0), 0.0, 255.0));
 	return (red << 16 | green << 8 | blue);
 }

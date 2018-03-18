@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/03 17:37:00 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/10/26 14:53:49 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/01/08 15:16:31 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_rotate_y(t_eye *eye, t_vector *m, int i)
 void	ft_rotate_z(t_eye *eye, t_vector *m, int i)
 {
 	t_vector	rot;
-	
+
 	rot = eye->rot;
 	eye->rot.x = rot.x * cos(PI / 180.0 * (i * ROT_SPEED)) - rot.y * \
 											sin(PI / 180.0 * (i * ROT_SPEED));

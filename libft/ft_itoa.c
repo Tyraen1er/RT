@@ -6,12 +6,13 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/09 14:58:42 by bmoiroud          #+#    #+#             */
-/*   Updated: 2016/11/22 20:51:34 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/11 19:02:30 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 char			*ft_itoa(int n)
 {
@@ -27,6 +28,8 @@ char			*ft_itoa(int n)
 		nb = (unsigned int)-n;
 	else
 		nb = (unsigned int)n;
+	if (nb == 0)
+		str[i] = '0';
 	while (nb > 0 || i == 0)
 	{
 		str[i++] = nb % 10 + 48;

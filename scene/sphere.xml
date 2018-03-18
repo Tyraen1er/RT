@@ -1,62 +1,28 @@
 <scene>
 	<camera>
-		<position>0,0,0</position>
-		<translation>-300,0,0</translation>
-		<orientation>1,0,0</orientation>
+		<position>100,-20,-40</position>
+		<orientation>10,0,7</orientation>
 	</camera>
-	<sphere>
-		<size>100</size>
-		<position>300,-25,-50</position>
-		<color>0,0,200</color>
-	</sphere>
-	<sphere>
-		<size>10</size>
-		<position>100,-100,0</position>
-		<color>0,0,200</color>
-	</sphere>
-	<sphere>
-		<size>10</size>
-		<position>95,0,-35</position>
-		<color>200,0,0</color>
-	</sphere>
-	<sphere>
-		<size>5</size>
-		<position>120,-20,3</position>
-		<color>54136</color>
-	</sphere>
-	<sphere>
-		<size>5</size>
-		<position>120,-20,-3</position>
-		<color>148512</color>
-	</sphere>
 	<plane>
-		<position>0,-800,20</position>
-		<color>0,100,200</color>
+		<position>0,-50,0</position>
 		<orientation>0,1,0</orientation>
+		<color>110,110,110</color>
 	</plane>
-	<cylinder>
-		<size>20</size>
-		<position>400,-30,70</position>
-		<color>200,0,200</color>
-		<orientation>3,1,2</orientation>
-	</cylinder>
-	<cone>
-		<position>1700,-400,600</position>
-		<size>5</size>
-		<color>255,200,0</color>
-		<orientation>0,3,-1</orientation>
-	</cone>
+	<sphere>
+		<position>180,-10,0</position>
+		<size>13</size>
+		<color>255,0,128</color>
+	</sphere>
 	<light>
-		<position>70,0,0</position>
-		<intensity>30</intensity>
+		<position>50,100,40</position>
+		<intensity>50</intensity>
 	</light>
 	<light>
-		<position>50,0,-30</position>
-		<translation>-300,0,0</translation>
-		<intensity>100</intensity>
+		<position>50,100,-40</position>
+		<intensity>50</intensity>
 	</light>
-	<light>
-		<position>1500,-700,0</position>
-		<intensity>70</intensity>
+    <light>
+		<position>50,100,0</position>
+		<intensity>50</intensity>
 	</light>
 </scene>

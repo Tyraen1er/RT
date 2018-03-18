@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/30 15:20:24 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/09 13:46:59 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/17 16:52:21 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,17 @@
 #include "texture.cl"
 #include "collision.cl"
 #include "reflection.cl"
+#include "depth_of_field.cl"
 
-static void		put_pixel(__global uint* pixels, const t_yx pixel, \
-											const t_yx size, const int color, const t_ray ray)
+static void		put_pixel(__global uint* pixels, const int2 pixel, const int2 size, const int color, const t_ray ray, __global t_rt *rt)
 {
-	pixels[pixel.x + pixel.y * size.x] = color;
-	
+	if (rt->offset == 0)
+		pixels[(pixel.x - rt->offset) + pixel.y * size.x] = color;
+	else
+		pixels[((pixel.x - rt->offset) / (rt->nb_cli + 1)) + (pixel.y * size.x / (rt->nb_cli + 1))] = color;
 }
 
-static t_ray	ft_init_ray(__global t_rt *rt, const t_yx coords, const t_yx size)
+static t_ray	ft_init_ray(__global t_rt *rt, const double2 coords, const int2 size)
 {
 	t_ray			ray;
 	const double	a = (WIN_W - ((double)(coords.x + 546) * rt->eye.fov)) / \
@@ -35,105 +37,124 @@ static t_ray	ft_init_ray(__global t_rt *rt, const t_yx coords, const t_yx size)
 	ray.t = 200000.0;
 	ray.dist = 200000.0;
 	ray.bounces = MAX_BOUNCES;
-	ray.dir = normalize((t_vector){a * rt->m[1].x + b * rt->m[2].x + \
-		rt->eye.zoom * rt->m[0].x, a * rt->m[1].y + b * rt->m[2].y + \
-		rt->eye.zoom * rt->m[0].y, a * rt->m[1].z + b * rt->m[2].z + \
-		rt->eye.zoom * rt->m[0].z});
+	ray.dir = normalize((t_vector){
+		a * rt->m[1].x + b * rt->m[2].x + rt->eye.zoom * rt->m[0].x, \
+		a * rt->m[1].y + b * rt->m[2].y + rt->eye.zoom * rt->m[0].y, \
+		a * rt->m[1].z + b * rt->m[2].z + rt->eye.zoom * rt->m[0].z \
+	});
 	ray.pos = rt->eye.pos;
 	return (ray);
 }
 
 static t_color	ft_color(__global t_rt *rt, const t_ray ray, const double l, __constant double *rand)
 {
-//	if (ray.id != -1 && ray.id != 0)
-//		printf("ray.t = %f\tray.id = %d\ttype = %s\n", ray.t, ray.id, (rt->objects[ray.id].type == 0 ? "SPHERE" : (rt->objects[ray.id].type == 1 ? "PLANE" : (rt->objects[ray.id].type == 2 ? "CONE" : (rt->objects[ray.id].type == 3 ? "CYLINDER" : "CUBE")))));
 	t_color	c;
 	int		color = (ray.id < rt->nb_obj) ? rt->objects[ray.id].color.c : -1;
-	
-	if (rt->objects[ray.id].p_texture != 0 && rt->effects)
+
+	if (color != -1 && rt->objects[ray.id].p_texture != 0 && rt->config.effects)
 		color = ft_procedural_texture(rt, ray, &rt->objects[ray.id], rand).c;
-	c.b = min(max(min(max((color >> 16 & 0xff) * l, 0.0), 255.0) + \
-						min(max(255.0 * (l - 1.0), 0.0), 255.0), 0.0), 255.0);
-	c.g = min(max(min(max((color >> 8 & 0xff) * l, 0.0), 255.0) + \
-						min(max(255.0 * (l - 1.0), 0.0), 255.0), 0.0), 255.0);
-	c.r = min(max(min(max((color & 0xff) * l, 0.0), 255.0) + \
+	c.b = min(max(min(max((color >> 16 & 0xff) * (l * BL), 0.0), 255.0) + \
+						min(max(220.0 * (l - 1.0), 0.0), 255.0), 0.0), 255.0);
+	c.g = min(max(min(max((color >> 8 & 0xff) * (l * GL), 0.0), 255.0) + \
+						min(max(244.0 * (l - 1.0), 0.0), 255.0), 0.0), 255.0);
+	c.r = min(max(min(max((color & 0xff) * (l * RL), 0.0), 255.0) + \
 						min(max(255.0 * (l - 1.0), 0.0), 255.0), 0.0), 255.0);
 	c.c = 0xff << 24 | c.b << 16 | c.g << 8 | c.r;
 	return (c);
 }
 
-void			print_data_infos(__global t_rt *rt, const t_yx coords, t_ray ray)
+t_color ft_get_color_per_ray(const double2 aa_coords, const int2 size, __global t_rt *rt, __constant double *rand)
 {
-	int			i = -1;
+	t_ray		ray;
+	t_object	obj;
+	t_color		color = {0, 0, 0, 0};
 
-	(void)ray;
-	if (coords.x == 0 && coords.y == 0)
-	{
-		printf("sizeof(t_vector): %lu\n", sizeof(t_vector));
-		printf("sizeof(t_object): %lu\n", sizeof(t_object));
-		printf("sizeof(t_light): %lu\n", sizeof(t_light));
-		printf("sizeof(t_eye): %lu\n", sizeof(t_eye));
-		printf("sizeof(t_color): %lu\n", sizeof(t_color));
-		printf("sizeof(t_vector): %lu\n", sizeof(t_vector));
-		printf("------ CL -------\n");
-		printf("cam---------\n");
-		printf("pos: %f %f %f\n", rt->eye.pos.x, rt->eye.pos.y, rt->eye.pos.z);
-		printf("rot: %f %f %f\n", rt->eye.rot.x, rt->eye.rot.y, rt->eye.rot.z);
-		printf("fov: %f zoom: %f aspect: %f\n", rt->eye.fov, rt->eye.zoom, rt->eye.aspect);
-		printf("m[3]--------\n");
-		printf("m[i]: %f %f %f\n", rt->m[0].x, rt->m[0].y, rt->m[0].z);
-		printf("m[1]: %f %f %f\n", rt->m[1].x, rt->m[1].y, rt->m[1].z);
-		printf("m[2]: %f %f %f\n", rt->m[2].x, rt->m[2].y, rt->m[2].z);
-	
-		printf("objs--------\n\n");
-		while (++i < 2)
-		{
-			printf("id: %d\n", i);
-			printf("pos: %f %f %f\n", rt->objects[i].pos.x, rt->objects[i].pos.y, rt->objects[i].pos.z);
-			printf("rot: %f %f %f\n", rt->objects[i].rot.x, rt->objects[i].rot.y, rt->objects[i].rot.z);
-			printf("size: %f %f %f\n", rt->objects[i].size.x, rt->objects[i].size.y, rt->objects[i].size.z);
-			printf("refract: %f reflect: %f spec: %f\n", rt->objects[i].refract, rt->objects[i].reflect, rt->objects[i].spec);
-			printf("type: %d\n", rt->objects[i].type);
-			printf("perturbation normale: %f\n", rt->objects[i].np);
-			printf("texture procedurale: %d\n", rt->objects[i].p_texture);
-			printf("color: %d\nrgb: %d %d %d\n\n", rt->objects[i].color.c, rt->objects[i].color.r, rt->objects[i].color.g, rt->objects[i].color.b);
-		}
-		i = -1;
-		printf("lgts--------\n\n");
-		while (++i < 2)
-		{
-			printf("id: %d\n", i);
-			printf("pos: %f %f %f\n", rt->lights[i].pos.x, rt->lights[i].pos.y, rt->lights[i].pos.z);
-			printf("intensity: %f\n\n", rt->lights[i].intensity);
-		}
-		printf("autre-------\n\n");
-		printf("shadows: %d line: %d\n", rt->shadows, rt->line);
-		printf("nbl: %d nbo: %d\n", rt->nb_light, rt->nb_obj);
-		printf("effects: %d\n", rt->effects);
-		printf("\n");
-	}
+	ray = ft_init_ray(rt, aa_coords, size);
+	ft_check_collisions(rt, &ray);
+	obj = rt->objects[ray.id];
+	if (rt->config.dof && rt->config.effects && aa_coords.x <= size.x)
+		color = ft_depth_of_field(rt, rand, size, aa_coords);
+	else if (rt->config.effects && (rt->objects[ray.id].reflect || rt->objects[ray.id].transp) && ray.id != -1)
+		color = ft_reflection(rt, &ray, rand);
+	else if (rt->config.show_focus && rt->config.dof)
+		color = ft_focus_plane(rt, &ray, rand);
+	else if (ray.id != -1)
+		color = ft_color(rt, ray, ft_light(rt, &ray, rand), rand);
+	else
+		color = (t_color){0, 0, 0, 0};
+	return (color);
 }
 
-__kernel void	core(__global uint *pixels, __global t_rt *rt, \
-								__constant t_key *keys, __constant double *rand)
+t_color ft_anti_aliasing(const int2	coords, __global t_rt *rt, __constant double *rand, const int2	size)
 {
-	const t_yx	coords = (t_yx){(int)get_global_id(GLOBAL_Y), \
-												(int)get_global_id(GLOBAL_X)};
-	const t_yx	size = (t_yx){(int)get_global_size(GLOBAL_Y), \
-												(int)get_global_size(GLOBAL_X)};
-	t_ray		ray = ft_init_ray(rt, coords, size);;
+	t_color			color = {0, 0, 0, 0};
+	t_color			color_for_now = {0, 0, 0, 0};
+	double2			aa_coords;
+	int				i = 1;
+	int				j = 1;
+	const int		aa_points = rt->config.aa / 4;
+	const double	aa_coef = 0.5 / (aa_points + 1);
+
+	while (i <= 4)
+	{
+		j = 1;
+		while (j <= aa_points)
+		{
+			if (i == 1)
+				aa_coords = (double2){coords.x + j * aa_coef, coords.y + (0.5 - j * aa_coef)};
+			else if (i == 2)
+				aa_coords = (double2){coords.x + 0.5 + j * aa_coef, coords.y + j * aa_coef};
+			else if (i == 3)
+				aa_coords = (double2){coords.x + 0.5 + j * aa_coef, coords.y + 0.5 + (0.5 - j * aa_coef)};
+			else
+				aa_coords = (double2){coords.x + j * aa_coef, coords.y + 0.5 + j * aa_coef};
+			color_for_now = ft_get_color_per_ray(aa_coords, size, rt, rand);
+			color.r += color_for_now.r;
+			color.g += color_for_now.g;
+			color.b += color_for_now.b;
+			j++;
+		}
+		i++;
+	}
+	color.r /= rt->config.aa;
+	color.g /= rt->config.aa;
+	color.b /= rt->config.aa;
+	color.c = 0xff << 24 | color.b << 16 | color.g << 8 | color.r;
+	return (color);
+}
+
+__kernel void	core(__global uint *pixels, __global t_rt *rt, __constant double *rand)
+{
+	const int2	size = {(int)get_global_size(GLOBAL_X), \
+												(int)get_global_size(GLOBAL_Y)};
+	const int2	coords = {(int)get_global_id(GLOBAL_X) * (rt->nb_cli + 1) + rt->offset, \
+												(int)get_global_id(GLOBAL_Y)};
+	double2		coordsinitray = (double2){coords.x, coords.y};
+	t_ray			ray = ft_init_ray(rt, coordsinitray, size);
 	t_object	obj;
 	int			color;
+	t_color		coucou;
 
-	//print_data_infos(rt, coords, ray);
-	ft_check_collisions(rt, &ray);
-	if (ray.id != -1)
+	if (rt->config.aa > 1 && rt->config.effects && coords.x <= size.x)
+		color = ft_anti_aliasing(coords, rt, rand, size).c;
+	else if ((rt->config.dof && !rt->config.aa) && rt->config.effects && coords.x <= size.x)
+		color = ft_depth_of_field(rt, rand, size, coordsinitray).c;
+	else if (coords.x <= size.x)
+	{
+		ft_check_collisions(rt, &ray);
 		obj = rt->objects[ray.id];
-	if (ray.id != -1 && rt->effects && (rt->objects[ray.id].reflect || rt->objects[ray.id].refract || rt->objects[ray.id].transp))
-		color = ft_reflection(rt, &ray, rand).c;
-	else if (ray.id != -1)
-		color = ft_color(rt, ray, ft_light(rt, &ray, rand), rand).c;
-	else
-		color = 0xff000000;
-	put_pixel(pixels, coords, size, color, ray);
+		if (rt->config.effects && (rt->objects[ray.id].reflect || rt->objects[ray.id].transp) && ray.id != -1)
+			color = ft_reflection(rt, &ray, rand).c;
+		else if (rt->config.show_focus && rt->config.dof)
+			color = ft_focus_plane(rt, &ray, rand).c;
+		else if (ray.id != -1)
+		{
+			coucou = ft_color(rt, ray, ft_light(rt, &ray, rand), rand);
+			color = coucou.c;
+		}
+		else
+			color = 0xff000000;
+	}
+	if (coords.x <= size.x)
+		put_pixel(pixels, coords, size, color, ray, rt);
 }

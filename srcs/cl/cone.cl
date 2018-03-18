@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/31 17:12:25 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/08 16:34:51 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/02/26 17:34:47 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 	{
 		if (dot(ray->dir, obj.rot))
 		{
-			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y * tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
+			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y * tan(obj.size.x * M_PI / 180), 0, 0}, .negative = obj.negative}, &tmpray);
 			if (0 < tmpray.t && tmpray.t < ray->t)
 			{
 				if (tmpray.t < e.delta)
@@ -77,7 +77,7 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 				}
 			}
 			tmpray.t = ray->t;
-			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y * tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
+			ft_plane_col((const t_object){obj.pos - obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y * tan(obj.size.x * M_PI / 180), 0, 0}, .negative = obj.negative}, &tmpray);
 			if (0 < tmpray.t && tmpray.t < ray->t)
 			{
 				if (tmpray.t < e.delta)
@@ -99,7 +99,7 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 	{
 		if (dot(ray->dir, obj.rot))
 		{
-			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y * tan(obj.size.x * M_PI / 180), 0, 0}}, &tmpray);
+			ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.y / 2, obj.rot, (t_vector){obj.size.y * tan(obj.size.x * M_PI / 180), 0, 0}, .negative = obj.negative}, &tmpray);
 			if (0 < tmpray.t)
 			{
 				if (tmpray.t < e.delta)
@@ -119,12 +119,4 @@ static void			ft_cone_col(const t_object obj, t_ray *ray)
 	ray->otherside = (e.delta != ray->t && nbcol % 2 == 0) ? e.delta : e.c;
 	if (e.c > 0.0000001 && e.c < ray->t)
 		ray->t = e.c;
-}
-
-static double2		ft_cone_text_coords(const t_vector hit, const __global t_object *obj)
-{
-	// double2		c = {
-	// 	, \
-		
-	// };
 }

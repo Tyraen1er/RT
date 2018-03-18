@@ -6,28 +6,11 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/23 13:39:47 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/02 16:19:55 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/13 15:49:30 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-// int		ft_countwords(const char *str, char c)
-// {
-// 	int nb;
-
-// 	nb = 0;
-// 	while (*str && ++nb)
-// 	{
-// 		while (*str == c)
-// 			str++;
-// 		if (!*str)
-// 			return (nb);
-// 		else
-// 			str++;
-// 	}
-// 	return (nb);
-// }
 
 int				ft_countwords(const char *str, char c)
 {

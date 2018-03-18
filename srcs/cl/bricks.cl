@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/04 18:19:02 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/05 15:15:39 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/02/26 18:09:07 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static double2		ft_brick_size(__global const t_object *obj, int i)
 		else if (obj->type == CYLINDER)
 			return ((double2){MORTAR_W, MORTAR_H * 20.0});
 		else if (obj->type == PLANE)
-			return ((double2){MORTAR_W * 300.0, MORTAR_H * 150.0});
+			return ((double2){MORTAR_W * 250.0, MORTAR_H * 400.0});
 	}
 	return (((double2){0, 0}));
 }

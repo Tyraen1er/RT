@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/01 14:07:52 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/03 15:16:10 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/13 15:49:13 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ double	ft_atod(char *str)
 	double	ret;
 	int		l;
 	int		sign;
-	
+
 	sign = (str[0] == '-') ? -1 : 1;
 	l = 0;
 	while (str[l] && str[l] != '.')

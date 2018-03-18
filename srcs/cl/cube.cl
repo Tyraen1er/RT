@@ -19,11 +19,7 @@ static void			ft_cube_col(const t_object obj, t_ray *ray)
 	double	c = 0.0;
 	t_ray	tmpray = *ray;
 	
-	ft_plane_col((const t_object){
-				 .pos = obj.pos - obj.rot * obj.size.x / 2,
-				 .rot = obj.rot,
-				 .size = (t_vector){obj.size.x, obj.size.x, 0}
-				 }, &tmpray);
+	ft_plane_col((const t_object){.pos = obj.pos - obj.rot * obj.size.x / 2, .rot = obj.rot, .size = (t_vector){obj.size.x, obj.size.x, 0}, .negative = obj.negative}, &tmpray);
 	if (0 < tmpray.t)
 	{
 		if (tmpray.t < b)
@@ -39,7 +35,7 @@ static void			ft_cube_col(const t_object obj, t_ray *ray)
 		}
 	}
 	tmpray.t = ray->t;
-	ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.x / 2, obj.rot, (t_vector){obj.size.x, obj.size.x, 0}}, &tmpray);
+	ft_plane_col((const t_object){obj.pos + obj.rot * obj.size.x / 2, obj.rot, (t_vector){obj.size.x, obj.size.x, 0}, .negative = obj.negative}, &tmpray);
 	if (0 < tmpray.t)
 	{
 		if (tmpray.t < b)
@@ -55,7 +51,7 @@ static void			ft_cube_col(const t_object obj, t_ray *ray)
 		}
 	}
 	tmpray.t = ray->t;
-	ft_plane_col((const t_object){obj.pos - normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z, -obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001), -obj.rot.x}) * obj.size.x / 2, normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z, -obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001), -obj.rot.x}), (t_vector){obj.size.x, obj.size.x, 0}}, &tmpray);
+	ft_plane_col((const t_object){obj.pos - normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z, -obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001), -obj.rot.x}) * obj.size.x / 2, normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z, -obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001), -obj.rot.x}), (t_vector){obj.size.x, obj.size.x, 0}, .negative = obj.negative}, &tmpray);
 	if (0 < tmpray.t)
 	{
 		if (tmpray.t < b)
@@ -71,7 +67,7 @@ static void			ft_cube_col(const t_object obj, t_ray *ray)
 		}
 	}
 	tmpray.t = ray->t;
-	ft_plane_col((const t_object){.pos = obj.pos + normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z,-obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001),-obj.rot.x}) * obj.size.x / 2, .rot = normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z,-obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001),-obj.rot.x}), .size = (t_vector){obj.size.x, obj.size.x, 0}}, &tmpray);
+	ft_plane_col((const t_object){.pos = obj.pos + normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z,-obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001),-obj.rot.x}) * obj.size.x / 2, .rot = normalize((t_vector){(obj.rot.y * obj.rot.y / (obj.rot.z + 0.000000001)) + obj.rot.z,-obj.rot.x * obj.rot.y / (obj.rot.z + 0.000000001),-obj.rot.x}), .size = (t_vector){obj.size.x, obj.size.x, 0}, .negative = obj.negative}, &tmpray);
 	if (0 < tmpray.t)
 	{
 		if (tmpray.t < b)
@@ -87,7 +83,7 @@ static void			ft_cube_col(const t_object obj, t_ray *ray)
 		}
 	}
 	tmpray.t = ray->t;
-	ft_plane_col((const t_object){obj.pos - normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}) * obj.size.x / 2, normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}), (t_vector){obj.size.x, obj.size.x, 0}}, &tmpray);
+	ft_plane_col((const t_object){obj.pos - normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}) * obj.size.x / 2, normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}), (t_vector){obj.size.x, obj.size.x, 0}, .negative = obj.negative}, &tmpray);
 	if (0 < tmpray.t)
 	{
 		if (tmpray.t < b)
@@ -103,7 +99,7 @@ static void			ft_cube_col(const t_object obj, t_ray *ray)
 		}
 	}
 	tmpray.t = ray->t;
-	ft_plane_col((const t_object){.pos = obj.pos + normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}) * obj.size.x / 2, normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}), (t_vector){obj.size.x, obj.size.x, 0}}, &tmpray);
+	ft_plane_col((const t_object){.pos = obj.pos + normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}) * obj.size.x / 2, normalize((t_vector){0, -1, obj.rot.y / (obj.rot.z + 0.000000001)}), (t_vector){obj.size.x, obj.size.x, 0}, .negative = obj.negative}, &tmpray);
 	if (0 < tmpray.t)
 	{
 		if (tmpray.t < b)

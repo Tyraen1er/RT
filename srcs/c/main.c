@@ -6,24 +6,13 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/23 14:52:43 by bmoiroud          #+#    #+#             */
-/*   Updated: 2018/01/28 19:50:25 by eferrand         ###   ########.fr       */
+/*   Updated: 2018/03/17 10:11:26 by eferrand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-// void		ft_translation(t_vector *pos, int *fd)
-// {
-// 	t_vector	v;
-
-// 	// v.set = 0;
-// 	// if (pos->set == 0)
-// 	// 	ft_error(2);
-// 	ft_get_coord(&v, fd);
-// 	*pos = ft_add_vector(*pos, v);
-// }
-
-double	ft_limits(double nb, double min, double max)
+double			ft_limits(double nb, double min, double max)
 {
 	if (nb < min)
 		return (min);
@@ -33,103 +22,84 @@ double	ft_limits(double nb, double min, double max)
 		return (nb);
 }
 
-int		ft_valid_color(int color)
+static void		main_loop(t_data *data)
 {
-	return (ft_limits(color, 0.0, 255.0));
-}
+	int			loop;
+	int			i;
 
-void		print_struct(t_rt rt)
-{
-	int		i = -1;
-
-	printf("sizeof(t_vector): %zu\n", sizeof(t_vector));
-	printf("sizeof(t_object): %zu\n", sizeof(t_object));
-	printf("sizeof(t_light): %zu\n", sizeof(t_light));
-	printf("sizeof(t_eye): %zu\n", sizeof(t_eye));
-	printf("sizeof(t_color): %zu\n", sizeof(t_color));
-	printf("sizeof(t_vector): %zu\n", sizeof(t_vector));
-	printf("%zu\n\n", sizeof(t_rt));
-	printf("------ C -------\n\n");
-	printf("cam---------\n\n");
-	printf("pos: %f %f %f\n", rt.eye.pos.x, rt.eye.pos.y, rt.eye.pos.z);
-	printf("rot: %f %f %f\n", rt.eye.rot.x, rt.eye.rot.y, rt.eye.rot.z);
-	printf("fov: %f zoom: %f aspect: %f\n", rt.eye.fov, rt.eye.zoom, rt.eye.aspect);
-	printf("effects: %d\n\n", rt.effects);
-	printf("objs--------\n\n");
-	while (++i < rt.nb_obj)
-	{
-		printf("id: %d\n", i);
-		printf("pos: %f %f %f\n", rt.objects[i].pos.x, rt.objects[i].pos.y, rt.objects[i].pos.z);
-		printf("rot: %f %f %f\n", rt.objects[i].rot.x, rt.objects[i].rot.y, rt.objects[i].rot.z);
-		printf("size: %f %f %f\n", rt.objects[i].size.x, rt.objects[i].size.y, rt.objects[i].size.z);
-		printf("refract: %f reflect: %f spec: %f\n", rt.objects[i].refract, rt.objects[i].reflect, rt.objects[i].spec);
-		printf("type: %d\n", rt.objects[i].type);
-		printf("perturbation normale: %f\n", rt.objects[i].np);
-		printf("texture procedurale: %d\n", rt.objects[i].p_texture);
-		printf("color: %d\nrgb: %d %d %d\n\n", rt.objects[i].color.c, rt.objects[i].color.r, rt.objects[i].color.g, rt.objects[i].color.b);
-	}
-	i = -1;
-	printf("lgts--------\n\n");
-	while (++i < rt.nb_light)
-	{
-		printf("id: %d\n", i);
-		printf("pos: %f %f %f\n", rt.lights[i].pos.x, rt.lights[i].pos.y, rt.lights[i].pos.z);
-		printf("intensity: %f\n\n", rt.lights[i].intensity);
-	}
-	printf("m[3]--------\n");
-	printf("m[i]: %f %f %f\n", rt.m[0].x, rt.m[0].y, rt.m[0].z);
-	printf("m[1]: %f %f %f\n", rt.m[1].x, rt.m[1].y, rt.m[1].z);
-	printf("m[2]: %f %f %f\n", rt.m[2].x, rt.m[2].y, rt.m[2].z);
-	printf("autre-------\n");
-	printf("shadows: %d line: %d\n", rt.shadows, rt.line);
-	printf("nbl: %d nbo: %d\n", rt.nb_light, rt.nb_obj);
-	printf("effects: %d\n", rt.effects);
-	printf("\n");
-}
-
-static void	main_loop(t_data *data)
-{
-	int		loop;
-
+	i = data->rt.nb_obj;
 	loop = 2;
 	while (loop)
 	{
 		if (loop == EVENT_UPDATE)
 		{
-			//print_struct(data->rt);
-			cl_run(&data->cl, (size_t[WORK_DIM]){data->sdl.size.y, data->sdl.size.x}, \
-			4, (t_arg){data->sdl.draw_surface->pixels, sizeof(uint32_t) * \
-			data->sdl.size.y * data->sdl.size.x, CL_MEM_WRITE_ONLY}, \
-			(t_arg){&data->rt, sizeof(t_rt), CL_MEM_READ_ONLY}, \
-			(t_arg){&data->keys, sizeof(t_key), CL_MEM_READ_ONLY}, \
-			(t_arg){&data->rand, MAX_RAND * sizeof(double), CL_MEM_READ_ONLY});
+			if ((data->keys.i == 0 && data->keys.h == 0) || data->keys.r == 1)
+				cl_run(&data->cl, (size_t[WORK_DIM]){data->sdl.size.y, \
+				data->sdl.size.x}, 3, (t_arg){data->sdl.draw_surface->pixels, \
+				sizeof(uint32_t) * data->sdl.size.y * data->sdl.size.x, \
+				CL_MEM_WRITE_ONLY}, (t_arg){&data->rt, sizeof(t_rt), \
+				CL_MEM_READ_ONLY}, (t_arg){&data->rand, MAX_RAND * \
+				sizeof(double), CL_MEM_READ_ONLY});
+			data->keys.r = 0;
+			(data->sdl.show_info) ? update_info(&data->sdl, &data->rt) : 0;
 			sdl_run(&data->sdl);
 		}
 		loop = sdl_events(&data->sdl, &data->keys, &data->rt);
+		data->keys.p = (data->keys.p) ? save_picture(&data->sdl) : 0;
 	}
 }
 
-int		main(int ac, char **av)
+void			ft_server(t_data data, char *file, int nb_cli)
 {
-	t_data	data;
-
+	if (nb_cli <= 0 || nb_cli > NB_MAX_CLIENT)
+		errors(ERR_SYS, "invalid number of clients\n");
 	ft_init_struct(&data);
-	if (ac < 2 || ac > 2)
-		ft_error(0, 0);
-	else if (av[1] == NULL)
-		ft_error(1, 0);
-	ft_parse(av[1], &data);
+	ft_parse(file, &data);
 	ft_init_data(&data);
-	data.rt.eye.aspect = 1.5;
-	data.rt.eye.fov = FOV;
-	data.rt.eye.zoom = ZOOM;
+	ft_get_conf(&data.rt.config, file);
+	if (data.rt.config.focus_dist != 0)
+		ft_get_focus(&data.rt.config.focus, data.rt.eye, &data.rt);
+	else
+		data.rt.config.dof = 0;
 	data.sdl.size.x = WIN_W;
 	data.sdl.size.y = WIN_H;
-	data.rt.effects = 1;
+	data.rt.config.aa = 1;
+	server(data, nb_cli);
+}
+
+void			start(t_data data, char *file)
+{
+	ft_init_struct(&data);
+	ft_parse(file, &data);
+	ft_init_data(&data);
+	ft_get_conf(&data.rt.config, file);
+	if (data.rt.config.focus_dist != 0)
+		ft_get_focus(&data.rt.config.focus, data.rt.eye, &data.rt);
+	else
+		data.rt.config.dof = 0;
 	sdl_init(&data.sdl, PROGRAM_NAME);
+	loading(&data.sdl);
+	data.sdl.filters = 0;
 	cl_init(&data.cl, 0);
 	main_loop(&data);
 	cl_end(&data.cl);
 	sdl_end(&data.sdl);
+}
+
+int				main(int ac, char **av)
+{
+	t_data		data;
+
+	ft_bzero(&data, sizeof(t_data));
+	if (ac < 2)
+		ft_error(0, 0);
+	else if (av[1] == NULL)
+		ft_error(1, 0);
+	if (ac >= 3 && ft_strcmp(av[1], "--client") == 0)
+		client(init_client(av[2]));
+	else if (ac == 4 && ft_strcmp(av[2], "--server") == 0)
+		ft_server(data, av[1], ft_atoi(av[3]));
+	else
+		start(data, av[1]);
 	return (0);
 }

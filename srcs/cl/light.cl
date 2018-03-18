@@ -6,7 +6,7 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/08/15 14:27:12 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/04 16:48:08 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/02/26 16:21:08 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,11 @@ static double	ft_calc_light(__global t_rt *rt, __global t_object *obj, \
 	double			light = min(max(dot(v, b) * (l->intensity / 100.0), 0.0), 1.3);
 	const double	tmp = pow(dot(b, c), 50.0) * dot(b, v) * (l->intensity / 100.0);
 
-	light = ((obj->refract) ? (1.0 * l->intensity / 100.0) : (light));
 	if (tmp > 0.0000001 && obj->type != PLANE)
 		light += tmp;
-	if (rt->effects && rt->shadows == 0)
+	if (rt->config.effects && rt->config.shadows == 0)
 		light *= 1.0 - ft_hard_shadows(rt, a, l);
-	else if (rt->effects && rt->shadows == 1)
+	else if (rt->config.effects && rt->config.shadows == 1)
 		light *= 1.0 - ft_soft_shadows(rt, a, l, rand);
 	return (min(max(light, 0.0), 1.3));
 }
@@ -44,5 +43,5 @@ static double	ft_light(__global t_rt *rt, const t_ray *ray, __constant double *r
 			light += ft_calc_light(rt, &rt->objects[ray->id], &rt->lights[i], ray, rand);
 	else
 		light = rt->lights[ray->id - rt->nb_obj].intensity / 100.0;
-	return (min(max(light, 0.06), 1.0 + rt->objects[ray->id].spec));
+	return (min(max(light, rt->config.ambient), 1.0 + rt->objects[ray->id].spec));
 }

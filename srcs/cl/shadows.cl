@@ -6,30 +6,11 @@
 /*   By: bmoiroud <bmoiroud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/13 15:05:50 by bmoiroud          #+#    #+#             */
-/*   Updated: 2017/12/04 18:32:51 by bmoiroud         ###   ########.fr       */
+/*   Updated: 2018/03/17 18:37:55 by bmoiroud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h.cl"
-
-/*void		ft_refract_shadow(t_rt *tmp, int i, t_light *light)
-{
-	t_vector	n;
-	t_vector	hit;
-	t_vector	v;
-
-	hit = tmp->ray.pos + (tmp->ray.dir * tmp->ray.dist);
-	v = light->pos - hit;
-	n = ft_normale(tmp, &tmp->objects[i], hit);
-	ft_refract_ray(tmp, 1.0, tmp->objects[i].refract, n);
-	ft_check_collisions(tmp, tmp->objects, tmp->lights);
-	tmp->ray.pos = tmp->ray.pos + (tmp->ray.dir * (tmp->ray.dist - 0.01));
-	tmp->ray.t = 2000000.0;
-	v = light->pos - hit;
-	tmp->ray.dist = sqrt(dot(v, v));
-	tmp->ray.id = -1;
-	ft_refract_ray(tmp, tmp->objects[i].refract, 1.0, n);
-}*/
 
 static double	ft_shadow_col(t_rt *tmp, t_ray *r)
 {
@@ -50,11 +31,9 @@ static double	ft_shadow_col(t_rt *tmp, t_ray *r)
 			ft_cyl_col(tmp->objects[i], &ray);
 		else if (tmp->objects[i].type == CUBE)
 			ft_cube_col(tmp->objects[i], &ray);
-		if (ray.t < r->dist && tmp->objects[i].negative)
-			check_col_neg((__global t_rt*)tmp, &ray, i);
-		if (ray.id != -1 && ray.t < r->dist && ray.t > 0.0 && !objs[i].refract && !objs[i].transp)
+		if (ray.t < r->dist && ray.t > 0.0 && !objs[i].transp && !tmp->objects[i].negative)
 			return (1.0);
-		if (ray.id != -1 && ray.t < r->dist && ray.t > 0.0 && objs[i].transp)
+		if (ray.t < r->dist && ray.t > 0.0 && objs[i].transp && !tmp->objects[i].negative)
 			return (1.0 - objs[i].transp / 100.0);
 	}
 	return (0.0);
@@ -68,7 +47,7 @@ static double	ft_soft_shadows(__global t_rt *rt, const t_vector hit, __global t_
 	t_vector		r;
 	int				i = -1;
 	double			l = 0.0;
-	const double	d = min(max(fabs(dot(hit, light->pos) / 10.0), 2000.0), 150.0);
+	const double	d = min(max(fabs(dot(hit, light->pos) / 10.0), 2000.0), 200.0);
 
 	while (++i < d)
 	{
